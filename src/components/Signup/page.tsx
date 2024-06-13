@@ -2,13 +2,18 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaSkull, FaEye, FaEyeSlash } from 'react-icons/fa';
-import {auth} from '@/config/firebase'
+import { auth } from '@/config/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import UserDetailsRoute from '../auth/UserDetailsRoute';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,13 +30,25 @@ const SignUpPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const flag = await createUserWithEmailAndPassword(auth, email, password);
-      if(flag){
-
-      }
+      await createUserWithEmailAndPassword(auth, email, password);
+      toast.success('Account created successfully!', {
+        position: "top-center",
+      });
+      router.push('/auth/userDetails');
     } catch (error) {
-      console.log(error)
+      if (error instanceof Error) {
+        toast.error(`Some error occured. Please try again`, {
+          position: 'top-center'
+        });
+      } else {
+        toast.error('An unexpected error occurred.', {
+          position: 'top-center',
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,11 +98,15 @@ const SignUpPage: React.FC = () => {
           <button
             type="submit"
             className="w-full py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors duration-300"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
-          <p className='mt-2 text-gray-300'>Already a user? <Link className='text-orange-400 hover:underline' href='/login'> Login here</Link></p>
+          <p className="mt-2 text-gray-300">
+            Already a user? <Link className="text-orange-400 hover:underline" href="/login"> Login here</Link>
+          </p>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

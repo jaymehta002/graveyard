@@ -1,13 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
-const TrendingSection = () => {
-  const [showNewDrops, setShowNewDrops] = useState(true);
-
-  const toggleTrending = () => {
-    setShowNewDrops(!showNewDrops);
-  };
+const TrendingSection: React.FC = () => {
+  const router = useRouter();
 
   const newDrops = [
     {
@@ -42,106 +40,42 @@ const TrendingSection = () => {
     },
   ];
 
-  const mostTrending = [
-    {
-      id: 1,
-      image: '/images/tshirts/1.1.jpg',
-      title: 'Trending 1',
-      price: '$24.99',
-    },
-    {
-      id: 2,
-      image: '/images/tshirts/1.2.jpg',
-      title: 'Trending 2',
-      price: '$34.99',
-    },
-    {
-      id: 3,
-      image: '/images/tshirts/2.1.jpg',
-      title: 'Trending 3',
-      price: '$44.99',
-    },
-    {
-      id: 4,
-      image: '/images/tshirts/3.1.jpg',
-      title: 'Trending 4',
-      price: '$54.99',
-    },
-    {
-      id: 5,
-      image: '/images/tshirts/4.1.jpg',
-      title: 'Trending 5',
-      price: '$64.99',
-    },
-  ];
-
   return (
     <div className="bg-black py-12">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center mb-8">
-          <button
-            className={`mx-2 px-4 py-2 rounded-lg ${
-              showNewDrops
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-800 text-gray-400'
-            }`}
-            onClick={toggleTrending}
-          >
-            New Drops
-          </button>
-          <button
-            className={`mx-2 px-4 py-2 rounded-lg ${
-              !showNewDrops
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-800 text-gray-400'
-            }`}
-            onClick={toggleTrending}
-          >
-            Most Trending
-          </button>
-        </div>
+      <div className="flex items-center justify-between mb-8">
+  <h2 className="text-3xl flex items-center font-bold border-l-4 py-4 px-4 border-orange-500 text-white">Latest Arrivals</h2>
+  <Link href="/products/all" className="flex items-center text-orange-500 hover:underline">
+    <p className="text-orange-500 hover:underline">View All</p>
+    {/* Optionally, you can add an arrow icon here */}
+    {/* <svg className="w-5 h-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+         <path fillRule="evenodd" d="M10 12a.75.75 0 01-.75-.75V7.75a.75.75 0 011.5 0v3.501L14.28 9.22a.75.75 0 111.06 1.06l-5.25 5.25a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 111.06-1.06l3.53 3.53v-3.501a.75.75 0 01-.75.75z" clipRule="evenodd" />
+       </svg> */}
+  </Link>
+</div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {showNewDrops
-            ? newDrops.map((card) => (
-                <div
-                  key={card.id}
-                  className="bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-orange-500/50 transition-shadow duration-300"
-                >
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-72 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 text-white">
-                      {card.title}
-                    </h3>
-                    <p className="text-orange-500">{card.price}</p>
-                  </div>
-                </div>
-              ))
-            : mostTrending.map((card) => (
-                <div
-                  key={card.id}
-                  className="bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-orange-500/50 transition-shadow duration-300"
-                >
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-72 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 text-white">
-                      {card.title}
-                    </h3>
-                    <p className="text-orange-500">{card.price}</p>
-                  </div>
-                </div>
-              ))}
+          {newDrops.map((card) => (
+            <div
+              key={card.id}
+              className="bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-orange-500/50 transition-shadow duration-300"
+            >
+              <Image
+                src={card.image}
+                alt={card.title}
+                width={600}
+                height={400}
+                className="w-full h-72 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2 text-white">
+                  {card.title}
+                </h3>
+                <p className="text-orange-500">{card.price}</p>
+              </div>
+            </div>
+          ))}
+
         </div>
       </div>
     </div>

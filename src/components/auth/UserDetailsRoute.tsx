@@ -1,32 +1,74 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import ProtectedRoute from './ProtectedRoute';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { addDoc, collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore';
+import { db, auth } from '@/config/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { profile } from 'console';
+import LoadingSpinner from '../Loader/loader';
 
-const UserDetailsRoute = () => {
+const UserDetailsRoute: React.FC = () => {
+  const [user, setUser] = useState<any>(null);
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const userQuery = query(collection(db, 'users'), where('uid', '==', currentUser.uid));
+        const userDocs = await getDocs(userQuery);
+
+        if (!userDocs.empty) {
+          router.push('/'); // Redirect to dashboard or any other page for existing users
+        } else {
+          setLoading(false);
+        }
+      } else {
+        router.push('/login'); // Redirect to login if not authenticated
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // You can handle form submission logic here, such as sending the data to a server or updating the user's profile
     try {
-        //firebase
-        await addDoc(collection(db, "users"), {
-            name,
-            gender,
-            age,
-            phone,
-            dob,
-        })
+      if (user) {
+        const userDoc = doc(db, 'users', user.uid);
+        await setDoc(userDoc, {
+          uid: user.uid,
+          name,
+          gender,
+          age,
+          phone,
+          dob,
+          profilePic: '',
+          address: {
+            street: '',
+            city: '',
+            state: '',
+            country: '',
+            zip: '',
+          }
+        });
+        router.push('/');
+      }
     } catch (error) {
-        console.log(error)
+      console.error('Error adding document: ', error);
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <ProtectedRoute>

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FaSkull, FaBars, FaShoppingCart, FaUser } from 'react-icons/fa';
+import Image from 'next/image';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,9 +16,8 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <Link href="/" className="text-gray-200 text-xl font-extrabold flex items-center">
-              <FaSkull className="mr-2 text-orange-500" />
-              GraveYard
+            <Link href="/" className="text-gray-200 text-xl font-serif font-extrabold flex items-center">  
+              GRAVEYARD
             </Link>
           </div>
           <div className="hidden md:block">

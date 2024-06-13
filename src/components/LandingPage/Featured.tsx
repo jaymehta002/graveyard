@@ -7,8 +7,8 @@ import Image from 'next/image';
 
 const FeaturedSection: React.FC = () => {
   return (
-    <div className="bg-gray-900 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-900">
+      <div className="w-full">
         {/* <h2 className="text-white text-3xl font-bold mb-8 text-center">Featured Offers</h2> */}
         <Carousel
           showArrows={true}
@@ -16,7 +16,7 @@ const FeaturedSection: React.FC = () => {
           showStatus={false}
           infiniteLoop={true}
           autoPlay={true}
-          interval={2500}
+          interval={3000}
           transitionTime={500}
           renderArrowPrev={(onClickHandler, hasPrev) => (
             <button
@@ -50,20 +50,21 @@ const FeaturedSection: React.FC = () => {
               </svg>
             </button>
           )}
+          className="h-screen w-full"
         >
           <div>
             <Link href="/offer1">
-              <Image src="/images/offer1.png" alt="Offer 1" width={1920} height={1080} className="w-full h-96 object-cover" />
+              <Image src="/images/offer1.png" alt="Offer 1" width={1920} height={1080} className="w-full h-screen object-cover" /> {/* Modify this line */}
             </Link>
           </div>
           <div>
             <Link href="/offer2">
-              <Image src="/images/offer2.png" alt="Offer 2" width={1920} height={1080} className="w-full h-96 object-cover" />
+              <Image src="/images/offer2.png" alt="Offer 2" width={1920} height={1080} className="w-full h-screen object-cover" /> {/* Modify this line */}
             </Link>
           </div>
           <div>
             <Link href="/offer3">
-              <Image src="/images/offer3.png" alt="Offer 3" width={1920} height={1080} className="w-full h-96 object-cover" />
+              <Image src="/images/offer3.png" alt="Offer 3" width={1920} height={1080} className="w-full h-screen object-cover" /> {/* Modify this line */}
             </Link>
           </div>
         </Carousel>

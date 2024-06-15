@@ -2,11 +2,16 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaSkull, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const { signIn } = useAuth();
+  const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -20,10 +25,16 @@ const LoginPage: React.FC = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform login logic here
-    console.log('Email:', email, 'Password:', password);
+    setError('');
+    try {
+      await signIn(email, password);
+      router.push('/');
+    } catch (err) {
+      setError('Failed to log in. Please check your credentials.');
+      console.error('Login error:', err);
+    }
   };
 
   return (
@@ -33,6 +44,7 @@ const LoginPage: React.FC = () => {
           <FaSkull className="text-orange-500 mx-auto mb-4 text-5xl" />
           <h1 className="text-white text-3xl font-bold">GraveYard Login</h1>
         </div>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-300 font-medium mb-2">

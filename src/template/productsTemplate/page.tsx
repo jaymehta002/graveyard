@@ -26,7 +26,7 @@ const ProductsPage = (props : any) => {
       <Navbar />
 
       {/* Subnavbar */}
-      <div className="bg-gray-900 py-4 flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* <div className="bg-gray-900 py-4 flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div>
           <select
             name="category"
@@ -66,7 +66,7 @@ const ProductsPage = (props : any) => {
             <option value="1">1 star & up</option>
           </select>
         </div>
-      </div>
+      </div> */}
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4'>
       {props.children}
 

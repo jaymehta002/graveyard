@@ -6,15 +6,17 @@ export type Product = {
     category: string
     stock: number
     image: string[]
-    color: string[]
+    sizes: string[]
     rating: {
         average: number
         count: number
     }
     reviews?: {
+        uid: string
         name: string
         review: string
         rating: number
+        image?: string[]
     }[];
     tags: string[]
 }

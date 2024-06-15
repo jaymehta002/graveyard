@@ -4,6 +4,7 @@ import Featured from "@/components/LandingPage/Featured";
 import TrendingSection from "@/components/LandingPage/Trending";
 import Footer from "@/components/Footer/page";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import Sale from "@/components/LandingPage/Sale";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <Navbar />
       <Featured />
       <TrendingSection />
+      <Sale />
       <Footer />
     </>
   );

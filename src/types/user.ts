@@ -5,6 +5,7 @@ export type User = {
     email: string
     profilePic: string
     address: Address
+    orders: string[]
 }
 
 export type Address = {

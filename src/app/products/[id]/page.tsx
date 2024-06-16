@@ -1,11 +1,11 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Product } from '@/types/product';
 import useProductStore from '@/store/productStore';
 import Layout from '@/template/DefaultLayout';
-import { useAuth } from '@/hooks/useAuth'; // Assume this hook exists for authentication
-// import { addReview } from '@/services/productservice'; // Assume this function exists to add reviews
+import { useAuth } from '@/hooks/useAuth';
 
 interface PageProps {
   params: {
@@ -22,6 +22,7 @@ interface ReviewData {
 }
 
 const Page = ({ params }: PageProps) => {
+  const router = useRouter();
   const products = useProductStore((state) => state.products);
   const product = products.find((product) => product.pid === params.id) as Product;
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
@@ -29,17 +30,28 @@ const Page = ({ params }: PageProps) => {
   const [reviewText, setReviewText] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewImage, setReviewImage] = useState<File | null>(null);
-  const { user } = useAuth(); // Assume this hook provides user authentication info
+  const { user } = useAuth();
 
   if (!product) return null;
 
+  const handleAddToCart = () => {
+    if (product.stock > 0) {
+      const paymentDetails = {
+        productId: product.pid,
+        productName: product.name,
+        price: product.price,
+        quantity: 1,
+        size: selectedSize,
+      };
 
-  const addReview = async (productId: string, reviewData: ReviewData) => {
+      const queryString = encodeURIComponent(JSON.stringify(paymentDetails));
+      router.push(`/payment?details=${queryString}`);
+    }
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return; // Ensure user is logged in
+    if (!user) return;
 
     try {
       const reviewData = {
@@ -53,7 +65,6 @@ const Page = ({ params }: PageProps) => {
       setReviewText('');
       setReviewRating(5);
       setReviewImage(null);
-      // Optionally, refresh the product data to show the new review
     } catch (error) {
       console.error('Error adding review:', error);
     }
@@ -135,6 +146,7 @@ const Page = ({ params }: PageProps) => {
               <button
                 className="w-full bg-orange-500 text-black px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
                 disabled={product.stock === 0}
+                onClick={handleAddToCart}
               >
                 {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
               </button>

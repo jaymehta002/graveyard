@@ -5,6 +5,7 @@ import { db } from "@/config/firebase";
 import { Product } from "@/types/product";
 import Image from "next/image";
 import Default from "../../Layouts/Default";
+import Sidebar from "../../Layouts/Sidebar";
 
 const ProductForm: React.FC = () => {
   const initialProductState: Product = {
@@ -103,8 +104,9 @@ const ProductForm: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="max-w-6xl mx-auto mt-8 p-6 bg-gray-800 rounded-lg shadow-md">
+    <Default>
+      <div className="max-w-6xl p-6 bg-gray-600 rounded-lg shadow-md">
+        <Sidebar />
         <h2 className="text-3xl font-bold text-white mb-6 text-center">
           Add New Product
         </h2>
@@ -268,7 +270,7 @@ const ProductForm: React.FC = () => {
           </div>
         </form>
       </div>
-    </>
+    </Default>
   );
 };
 

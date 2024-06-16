@@ -9,11 +9,11 @@ import { useAuth } from '@/hooks/useAuth';
 const Page = () => {
   const router = useRouter();
   const products = useProductStore((state) => state.products);
-  // const {user} = useAuth();
-  // console.log(user)
-  // if(!user) {
-  //   router.push('/login');
-  // }
+  const {user} = useAuth();
+  console.log(user)
+  if(!user) {
+    router.push('/login');
+  }
 
   const handleProductClick = (pid: string) => {
     router.push(`/products/${pid}`);

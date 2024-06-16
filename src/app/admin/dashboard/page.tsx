@@ -1,7 +1,7 @@
 import React from 'react'
-import Default from './Layouts/Default'
+import Default from '../Layouts/Default'
 
-const page = () => {
+const Page = () => {
   return (
     <Default>
       hello
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

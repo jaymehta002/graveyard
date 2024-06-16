@@ -6,6 +6,7 @@ import { Product } from '@/types/product';
 import useProductStore from '@/store/productStore';
 import Layout from '@/template/DefaultLayout';
 import { useAuth } from '@/hooks/useAuth';
+import useCartStore from '@/store/cartStore';
 
 interface PageProps {
   params: {
@@ -31,23 +32,44 @@ const Page = ({ params }: PageProps) => {
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewImage, setReviewImage] = useState<File | null>(null);
   const { user } = useAuth();
-
+  const addToCart = useCartStore((state) => state.addToCart);
   if (!product) return null;
 
-  const handleAddToCart = () => {
-    if (product.stock > 0) {
-      const paymentDetails = {
-        productId: product.pid,
-        productName: product.name,
-        price: product.price,
-        quantity: 1,
-        size: selectedSize,
-      };
 
-      const queryString = encodeURIComponent(JSON.stringify(paymentDetails));
-      router.push(`/payment?details=${queryString}`);
-    }
-  };
+const handleAddToCart = () => {
+  if (product.stock > 0) {
+    const cartItem = {
+      product: {
+        ...product,
+        size: selectedSize
+      },
+      quantity: 1
+    };
+    console.log(cartItem);
+    console.log(product);
+    addToCart(product);
+    // Optionally, you can show a confirmation message or navigate to the cart page
+    // For example:
+    // toast.success('Product added to cart');
+    // or
+    // router.push('/cart');
+  }
+};
+  // const handleAddToCart = () => {
+  //   addTOCart(product);
+  //   // if (product.stock > 0) {
+  //   //   const paymentDetails = {
+  //   //     productId: product.pid,
+  //   //     productName: product.name,
+  //   //     price: product.price,
+  //   //     quantity: 1,
+  //   //     size: selectedSize,
+  //   //   };
+
+  //   //   const queryString = encodeURIComponent(JSON.stringify(paymentDetails));
+  //   //   router.push(`/payment?details=${queryString}`);
+  //   // }
+  // };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

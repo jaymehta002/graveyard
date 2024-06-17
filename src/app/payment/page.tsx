@@ -1,6 +1,6 @@
-// PaymentPage.tsx
 'use client';
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Layout from '@/template/DefaultLayout';
 import usePaymentStore from '@/store/paymentStore';
@@ -19,7 +19,7 @@ interface PaymentDetails {
   totalPrice: number;
 }
 
-const PaymentPage = () => {
+const PaymentPageContent = () => {
   const searchParams = useSearchParams();
   const { paymentDetails, setPaymentDetails, savePaymentDetails } = usePaymentStore();
   const [loading, setLoading] = useState(false);
@@ -116,58 +116,60 @@ const PaymentPage = () => {
 
   if (error) {
     return (
-      <Layout>
-        <div className="container mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
-          <p>{error}</p>
-        </div>
-      </Layout>
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
+        <p>{error}</p>
+      </div>
     );
   }
 
   if (!paymentDetails || !razorpayLoaded) {
     return (
-      <Layout>
-        <div className="container mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Loading...</h1>
-        </div>
-      </Layout>
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="text-2xl font-bold mb-4">Loading...</h1>
+      </div>
     );
   }
 
   if (orderPlaced) {
     return (
-      <Layout>
-        <div className="container mx-auto px-4 py-8 text-center">
-          <h1 className="text-3xl font-bold mb-4">Order Placed Successfully</h1>
-          <p>Your order has been successfully placed. Thank you for shopping!</p>
-        </div>
-      </Layout>
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">Order Placed Successfully</h1>
+        <p>Your order has been successfully placed. Thank you for shopping!</p>
+      </div>
     );
   }
 
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">Complete Your Payment</h1>
-        <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-          {paymentDetails.items.map((item, index) => (
-            <div key={index} className="mb-2">
-              <p>{item.productName} - {item.quantity} x ${item.price}</p>
-              <p className="text-sm text-gray-600">Size: {item.size}</p>
-            </div>
-          ))}
-          <p className="text-xl font-bold mt-4 mb-6">Total: ${paymentDetails.totalPrice.toFixed(2)}</p>
-          <button
-            onClick={handlePayment}
-            disabled={loading}
-            className="w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 transition-colors"
-          >
-            {loading ? 'Processing...' : 'Pay Now'}
-          </button>
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Complete Your Payment</h1>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+        {paymentDetails.items.map((item, index) => (
+          <div key={index} className="mb-2">
+            <p>{item.productName} - {item.quantity} x ${item.price}</p>
+            <p className="text-sm text-gray-600">Size: {item.size}</p>
+          </div>
+        ))}
+        <p className="text-xl font-bold mt-4 mb-6">Total: ${paymentDetails.totalPrice.toFixed(2)}</p>
+        <button
+          onClick={handlePayment}
+          disabled={loading}
+          className="w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 transition-colors"
+        >
+          {loading ? 'Processing...' : 'Pay Now'}
+        </button>
       </div>
+    </div>
+  );
+};
+
+const PaymentPage = () => {
+  return (
+    <Layout>
+      <Suspense fallback={<div className="container mx-auto px-4 py-8 text-center">Loading...</div>}>
+        <PaymentPageContent />
+      </Suspense>
     </Layout>
   );
 };

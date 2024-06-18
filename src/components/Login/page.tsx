@@ -8,9 +8,10 @@ import { useRouter } from 'next/navigation';
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // const {signIn} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const { signIn } = useAuth();
+  const { user, signIn } = useAuth();
   const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-900 flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
           <FaSkull className="text-orange-500 mx-auto mb-4 text-5xl" />

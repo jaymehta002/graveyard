@@ -1,11 +1,15 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FaSkull, FaBars, FaShoppingCart, FaUser } from 'react-icons/fa';
-import Image from 'next/image';
+import { FaBars, FaShoppingCart, FaUser } from 'react-icons/fa';
+import useCartStore from '@/store/cartStore';
+import { useAuth } from '@/hooks/useAuth';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(3); // Example count, replace with actual state management
+  const cart = useCartStore((state) => state.items);
+  const {user} = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -16,7 +20,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <Link href="/" className="text-gray-200 text-xl font-serif font-extrabold flex items-center">  
+            <Link href="/" className="text-gray-200 text-xl font-serif font-extrabold flex items-center">
               GRAVEYARD
             </Link>
           </div>
@@ -34,12 +38,21 @@ const Navbar: React.FC = () => {
               <Link href="/kids" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
                 Kids
               </Link>
-              <Link href="/cart" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium">
+              <Link href="/cart" className="relative text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium">
                 <FaShoppingCart className="text-lg" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-orange-500 rounded-full">
+                    {cart.length}
+                  </span>
+                )}
               </Link>
-              <Link href="/account" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
+              {user ? (<Link href="/account" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
                 <FaUser className="text-lg" />
-              </Link>
+              </Link>) : (
+                <Link href="/login" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
+                  <FaUser className="text-lg" />
+                </Link>
+              )}
             </div>
           </div>
           <div className="-mr-2 flex md:hidden">
@@ -71,9 +84,14 @@ const Navbar: React.FC = () => {
             <Link href="/kids" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
               Kids
             </Link>
-            <Link href="/cart" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
+            <Link href="/cart" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium relative">
               <FaShoppingCart className="inline-block mr-2" />
               Cart
+              {cartCount > 0 && (
+                <span className="absolute -top-2 right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-orange-500 rounded-full">
+                  {cart.length}
+                </span>
+              )}
             </Link>
             <Link href="/account" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
               <FaUser className="inline-block mr-2" />

@@ -7,8 +7,8 @@ import Image from 'next/image';
 
 const FeaturedSection: React.FC = () => {
   return (
-    <div className="bg-gray-900">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-gray-900">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Carousel
           showArrows={true}
           showThumbs={false}
@@ -52,22 +52,49 @@ const FeaturedSection: React.FC = () => {
         >
           <div>
             <Link href="/offer1">
-              <Image src="/images/offer1.png" alt="Offer 1" layout="responsive" width={1920} height={1080} className="object-cover" />
+              <>
+                <Image 
+                  src="/images/offer1.png" 
+                  alt="Offer 1" 
+                  // layout="responsive" 
+                  width={1920} 
+                  height={1080} 
+                  className="object-cover"
+                />
+              </>
             </Link>
           </div>
           <div>
             <Link href="/offer2">
-              <Image src="/images/offer2.png" alt="Offer 2" layout="responsive" width={1920} height={1080} className="object-cover" />
+              <>
+                <Image 
+                  src="/images/offer2.png" 
+                  alt="Offer 2" 
+                  // layout="responsive" 
+                  width={1920} 
+                  height={1080} 
+                  className="object-cover"
+                />
+              </>
             </Link>
           </div>
           <div>
             <Link href="/offer3">
-              <Image src="/images/offer3.png" alt="Offer 3" layout="responsive" width={1920} height={1080} className="object-cover" />
+              <>
+                <Image 
+                  src="/images/offer3.png" 
+                  alt="Offer 3" 
+                  // layout="responsive" 
+                  width={1920} 
+                  height={1080} 
+                  className="object-cover"
+                />
+              </>
             </Link>
           </div>
         </Carousel>
       </div>
-    </div>
+    </section>
   );
 };
 

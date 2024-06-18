@@ -1,12 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import ProtectedRoute from './ProtectedRoute';
 import { addDoc, collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore';
 import { db, auth } from '@/config/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { profile } from 'console';
 import LoadingSpinner from '../Loader/loader';
+import ProtectedRoute from './ProtectedRoute';
 
 const UserDetailsRoute: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -15,6 +14,11 @@ const UserDetailsRoute: React.FC = () => {
   const [age, setAge] = useState('');
   const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+  const [zip, setZip] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -26,6 +30,17 @@ const UserDetailsRoute: React.FC = () => {
         const userDocs = await getDocs(userQuery);
 
         if (!userDocs.empty) {
+          const userData = userDocs.docs[0].data();
+          setName(userData.name);
+          setGender(userData.gender);
+          setAge(userData.age);
+          setPhone(userData.phone);
+          setDob(userData.dob);
+          setStreet(userData.address.street);
+          setCity(userData.address.city);
+          setState(userData.address.state);
+          setCountry(userData.address.country);
+          setZip(userData.address.zip);
           router.push('/'); // Redirect to dashboard or any other page for existing users
         } else {
           setLoading(false);
@@ -50,13 +65,13 @@ const UserDetailsRoute: React.FC = () => {
           age,
           phone,
           dob,
-          profilePic: '',
+          profilePic: user.photoURL || '',
           address: {
-            street: '',
-            city: '',
-            state: '',
-            country: '',
-            zip: '',
+            street,
+            city,
+            state,
+            country,
+            zip,
           }
         });
         router.push('/');
@@ -131,7 +146,7 @@ const UserDetailsRoute: React.FC = () => {
               required
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-4">
             <label htmlFor="dob" className="block text-gray-300 font-medium mb-2">
               Date of Birth
             </label>
@@ -140,6 +155,71 @@ const UserDetailsRoute: React.FC = () => {
               id="dob"
               value={dob}
               onChange={(e) => setDob(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="street" className="block text-gray-300 font-medium mb-2">
+              Street
+            </label>
+            <input
+              type="text"
+              id="street"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="city" className="block text-gray-300 font-medium mb-2">
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="state" className="block text-gray-300 font-medium mb-2">
+              State
+            </label>
+            <input
+              type="text"
+              id="state"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="country" className="block text-gray-300 font-medium mb-2">
+              Country
+            </label>
+            <input
+              type="text"
+              id="country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label htmlFor="zip" className="block text-gray-300 font-medium mb-2">
+              ZIP Code
+            </label>
+            <input
+              type="text"
+              id="zip"
+              value={zip}
+              onChange={(e) => setZip(e.target.value)}
               className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               required
             />

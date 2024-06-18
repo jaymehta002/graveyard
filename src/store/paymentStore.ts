@@ -13,8 +13,10 @@ interface PaymentItem {
 
 interface PaymentDetails {
   items: PaymentItem[];
+  userId: string;
   totalItems: number;
   totalPrice: number;
+  date: Date;
 }
 
 interface PaymentStoreState {

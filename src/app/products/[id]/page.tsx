@@ -41,13 +41,13 @@ const handleAddToCart = () => {
     const cartItem = {
       product: {
         ...product,
-        size: selectedSize
+        sizes: [selectedSize]
       },
+      selectedSize: selectedSize,
       quantity: 1
     };
     console.log(cartItem);
-    console.log(product);
-    addToCart(product);
+    addToCart(product, selectedSize);
     // Optionally, you can show a confirmation message or navigate to the cart page
     // For example:
     // toast.success('Product added to cart');
@@ -78,7 +78,7 @@ const handleAddToCart = () => {
     try {
       const reviewData = {
         uid: user.uid,
-        name: user.displayName || user.email || '',
+        name: user.name || user.email || '',
         review: reviewText,
         rating: reviewRating,
         image: reviewImage ? await convertToBase64(reviewImage) : '',

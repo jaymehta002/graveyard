@@ -2,36 +2,76 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  User,
+  User as FirebaseUser,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   updateProfile
 } from 'firebase/auth';
-import { auth } from '@/config/firebase';
+import { auth, db } from '@/config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
-interface AuthUser {
+export type Address = {
+  street: string;
+  city: string;
+  state: string;
+  country: string;
+  zip: string;
+};
+
+export type User = {
   uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-}
+  name: string;
+  phone: string;
+  email: string;
+  profilePic: string;
+  address: Address;
+  orders: string[];
+};
 
 export function useAuth() {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
-        const authUser: AuthUser = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL
-        };
-        setUser(authUser);
+        try {
+          const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data() as User;
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              name: firebaseUser.displayName || userData.name,
+              profilePic: firebaseUser.photoURL || userData.profilePic,
+              phone: firebaseUser.phoneNumber || userData.phone,
+              address: userData.address,
+              orders: userData.orders
+            });
+          } else {
+            // Handle case where the user document does not exist
+            const defaultUser: User = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              name: firebaseUser.displayName || '',
+              profilePic: firebaseUser.photoURL || '',
+              phone: firebaseUser.phoneNumber || '',
+              address: {
+                street: '',
+                city: '',
+                state: '',
+                country: '',
+                zip: ''
+              },
+              orders: []
+            };
+            setUser(defaultUser);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
       } else {
         setUser(null);
       }
@@ -41,10 +81,9 @@ export function useAuth() {
     return () => unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, displayName: string) => {
+  const signUp = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(userCredential.user, { displayName });
       return userCredential.user;
     } catch (error) {
       console.error('Error signing up:', error);
@@ -79,3 +118,5 @@ export function useAuth() {
     signOut: signOutUser
   };
 }
+
+export default useAuth;

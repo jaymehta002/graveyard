@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import UserDetailsRoute from '../auth/UserDetailsRoute';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAuth from '@/hooks/useAuth';
 
 const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const SignUpPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const {signUp} = useAuth();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -32,7 +34,7 @@ const SignUpPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signUp(email, password);
       toast.success('Account created successfully!', {
         position: "top-center",
       });

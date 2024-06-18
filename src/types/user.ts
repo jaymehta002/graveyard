@@ -15,3 +15,5 @@ export type Address = {
     country: string
     zip: string
 }
+
+export default User

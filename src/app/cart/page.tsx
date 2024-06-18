@@ -105,7 +105,7 @@ const Page: React.FC = () => {
                         <div className="flex items-center space-x-3">
                           <button
                             className="bg-gray-700 text-white p-2 rounded-full transition-colors duration-150 ease-in-out hover:bg-gray-600"
-                            onClick={() => updateQuantity(item.product.pid, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.product.pid, item.selectedSize,  item.quantity - 1)}
                             disabled={item.quantity <= 1}
                             aria-label={`Decrease quantity of ${item.product.name}`}
                           >
@@ -113,14 +113,14 @@ const Page: React.FC = () => {
                           </button>
                           <button
                             className="bg-gray-700 text-white p-2 rounded-full transition-colors duration-150 ease-in-out hover:bg-gray-600"
-                            onClick={() => updateQuantity(item.product.pid, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.product.pid, item.selectedSize, item.quantity + 1)}
                             aria-label={`Increase quantity of ${item.product.name}`}
                           >
                             <FaPlus size={14} />
                           </button>
                           <button
                             className="bg-red-600 text-white p-2 rounded-full transition-colors duration-150 ease-in-out hover:bg-red-700"
-                            onClick={() => removeFromCart(item.product.pid)}
+                            onClick={() => removeFromCart(item.product.pid, item.selectedSize)}
                             aria-label={`Remove ${item.product.name} from cart`}
                           >
                             <FaTrash size={14} />

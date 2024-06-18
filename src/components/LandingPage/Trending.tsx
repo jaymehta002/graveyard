@@ -19,7 +19,7 @@ const TrendingSection: React.FC = () => {
   };
 
   const handleAddToCart = (card: any) => {
-    addToCart(card);
+    // addToCart(card);
     toast.success(`Added to cart!`);
   };
 

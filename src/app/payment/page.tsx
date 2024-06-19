@@ -54,7 +54,6 @@ const PaymentPageContent: React.FC = () => {
         setError('Invalid payment details');
       }
     };
-
     fetchAndStoreDetails();
     loadRazorpayScript();
 

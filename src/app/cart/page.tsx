@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import Image from 'next/image';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import Layout from '@/template/DefaultLayout';
@@ -9,7 +9,15 @@ import useCart from '@/hooks/useCart';
 import { CartItem } from "@/store/cartStore";
 import useAuth from "@/hooks/useAuth";
 
-const Page: React.FC = () => {
+const Page = () => {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <CartComponent />
+    </Suspense>
+  )
+}
+
+const CartComponent: React.FC = () => {
   const {user} = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();

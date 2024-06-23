@@ -43,16 +43,16 @@ const ProductsPage: React.FC = () => {
                 <th className="py-3 px-4 border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
                   Name
                 </th>
-                <th className="py-3 px-4 border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
+                <th className="py-3 px-4    border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
                   Price
                 </th>
-                <th className="py-3 px-4 border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
+                <th className="py-3 px-4  border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
                   Category
                 </th>
                 <th className="py-3 px-4 border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
                   Stock
                 </th>
-                <th className="py-3 px-4 border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
+                <th className="py-3 px-4  border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
                   Rating
                 </th>
                 <th className="py-3 px-4 border-b border-gray-300 text-left font-medium text-sm text-gray-600 uppercase">
@@ -63,35 +63,32 @@ const ProductsPage: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
               {products.map((product) => (
                 <tr key={product.pid} className="hover:bg-gray-100 transition duration-300">
-                  <td className="py-3 px-4 whitespace-nowrap">{product.name}</td>
-                  <td className="py-3 px-4">${product.price}</td>
-                  <td className="py-3 px-4">{product.category}</td>
-                  <td className="py-3 px-4">{product.stock}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 md:whitespace-nowrap">{product.name}</td>
+                  <td className="py-3  px-4">${product.price}</td>
+                  <td className="py-3  px-4">{product.category}</td>
+                  <td className="py- v px-4">{product.stock}</td>
+                  <td className="py-3  px-4">
                     {product.rating.average} ({product.rating.count})
                   </td>
-                  <td className="py-3 px-4">
-                    <div className="flex space-x-2">
-                      <button
-                        className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                        onClick={() => updateStar(product.pid)}
-                      >
-                        {/* <FaStar /> */}
-                        <CiStar />
-                      </button>
-                      <button
-                        className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                        onClick={() => handleEditClick(product)}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="text-red-500 hover:text-red-700 hover:cursor-pointer focus:outline-none"
-                        onClick={() => handleDeleteClick(product.pid)}
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+                  <td className="py-3 px-4 flex space-x-2 md:justify-end">
+                    <button
+                      className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                      onClick={() => updateStar(product.pid)}
+                    >
+                      <CiStar />
+                    </button>
+                    <button
+                      className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                      onClick={() => handleEditClick(product)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="text-red-500 hover:text-red-700 hover:cursor-pointer focus:outline-none"
+                      onClick={() => handleDeleteClick(product.pid)}
+                    >
+                      <FaTrash />
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -4,23 +4,22 @@ import Default from '../Layouts/Default';
 import useProductStore from '@/store/productStore';
 import useUserStore from '@/store/userStore';
 import useOrderStore from '@/store/orderStore';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar, Pie, Line, Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto';
+import { format, subMonths } from 'date-fns';
 
 const Dashboard = () => {
   const products = useProductStore((state) => state.products);
   const users = useUserStore((state) => state.users);
   const orders = useOrderStore((state) => state.orders);
 
-  const topProducts = products.sort((a, b) => b.rating.average - a.rating.average).slice(0, 5);
-
-  const soldPid = orders.map((order) => order.products.map((product) => product.pid));
+  const topProducts = products.sort((a, b) => b.rating.average - a.rating.average).slice(0, 4);
 
   const productChartData = {
     labels: products.map((product) => product.name),
     datasets: [
       {
-        label: 'Products',
+        label: 'Top Products by Rating',
         data: topProducts.map((product) => product.rating.average),
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
@@ -31,8 +30,8 @@ const Dashboard = () => {
     labels: users.map((user) => user.name),
     datasets: [
       {
-        label: 'Users',
-        data: users.map((user) => user.orders),
+        label: 'Number of Orders per User',
+        data: users.map((user) => user.orders?.length || 0),
         backgroundColor: 'rgba(153, 102, 255, 0.6)',
       },
     ],
@@ -42,9 +41,55 @@ const Dashboard = () => {
     labels: orders.map((order) => `Order ${order.oid}`),
     datasets: [
       {
-        label: 'Orders',
+        label: 'Order Totals',
         data: orders.map((order) => order.total),
         backgroundColor: 'rgba(255, 159, 64, 0.6)',
+      },
+    ],
+  };
+
+  // Calculate total revenue generated
+  const totalRevenue = orders.reduce((total, order) => total + order.total, 0);
+
+  const revenueChartData = {
+    labels: ['Total Revenue'],
+    datasets: [
+      {
+        label: 'Total Revenue Generated',
+        data: [totalRevenue],
+        backgroundColor: ['rgba(255, 99, 132, 0.6)'],
+      },
+    ],
+  };
+
+  // Process orders to get counts per month over the last 4 months
+  const getOrderCountsPerMonth = () => {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const now = new Date();
+    const lastFourMonths = Array.from({ length: 4 }, (_, i) => subMonths(now, i));
+    const counts = lastFourMonths.map((month) => ({
+      month: monthNames[month.getMonth()],
+      year: month.getFullYear(),
+      count: orders.filter((order) => {
+        const orderDate = new Date(order.date);
+        return (
+          orderDate.getMonth() === month.getMonth() && orderDate.getFullYear() === month.getFullYear()
+        );
+      }).length,
+    })).reverse();
+
+    return counts;
+  };
+
+  const orderCountsPerMonth = getOrderCountsPerMonth();
+
+  const monthlyOrderChartData = {
+    labels: orderCountsPerMonth.map(({ month, year }) => `${month} ${year}`),
+    datasets: [
+      {
+        label: 'Orders Over Last 4 Months',
+        data: orderCountsPerMonth.map(({ count }) => count),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
       },
     ],
   };
@@ -54,52 +99,29 @@ const Dashboard = () => {
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-white shadow-md rounded p-4">
-            <h2 className="text-xl font-semibold mb-2">Products</h2>
-            <Bar data={productChartData} />
+          <div className="bg-white h-64 shadow-md rounded p-4">
+            <h2 className="text-xl font-semibold mb-2">Top Products by Rating</h2>
+            <Bar className='h-24' data={productChartData} />
           </div>
           <div className="bg-white shadow-md rounded p-4">
-            <h2 className="text-xl font-semibold mb-2">Users</h2>
+            <h2 className="text-xl font-semibold mb-2">Number of Orders per User</h2>
             <Pie data={userChartData} />
           </div>
           <div className="bg-white shadow-md rounded p-4">
-            <h2 className="text-xl font-semibold mb-2">Orders</h2>
+            <h2 className="text-xl font-semibold mb-2">Order Totals</h2>
             <Bar data={orderChartData} />
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Details</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-white shadow-md rounded p-4">
-              <h3 className="text-lg font-semibold mb-2">Product List</h3>
-              <ul>
-                {products.map((product) => (
-                  <li key={product.pid} className="mb-1">
-                    {product.name} - {product.category}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-white shadow-md rounded p-4">
-              <h3 className="text-lg font-semibold mb-2">User List</h3>
-              <ul>
-                {users.map((user) => (
-                  <li key={user.uid} className="mb-1">
-                    {user.name} orders
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-white shadow-md rounded p-4">
-              <h3 className="text-lg font-semibold mb-2">Order List</h3>
-              <ul>
-                {orders.map((order) => (
-                  <li key={order.oid} className="mb-1">
-                    Order {order.oid} - ${order.total}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <h2 className="text-xl font-semibold mb-4">Orders Over Last 4 Months</h2>
+          <div className="bg-white shadow-md rounded p-4">
+            <Line data={monthlyOrderChartData} />
+          </div>
+        </div>
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Revenue Overview</h2>
+          <div className="bg-white shadow-md rounded p-4">
+            <Doughnut data={revenueChartData} />
           </div>
         </div>
       </div>

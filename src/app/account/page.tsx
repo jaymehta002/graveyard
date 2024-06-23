@@ -3,24 +3,9 @@ import React from 'react';
 import Layout from '@/template/DefaultLayout';
 import { useAuth } from '@/hooks/useAuth';
 import Image from 'next/image';
-
-export type User = {
-  uid: string;
-  name: string;
-  phone: string;
-  email: string;
-  profilePic: string;
-  address: Address;
-  orders: string[];
-};
-
-export type Address = {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-  zip: string;
-};
+import User from '@/types/user';
+import { useRouter } from 'next/navigation';
+import useUserStore from '@/store/userStore';
 
 const UserDetails: React.FC<{ user: User }> = ({ user }) => {
   return (
@@ -28,7 +13,7 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
       <div className="flex flex-col md:flex-row items-center md:items-start">
         <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
           <Image 
-            src={user.profilePic} 
+            src={user.profilePic || `https://via.placeholder.com/150/text=${user.name.slice(0, 1)}`} 
             alt="Profile Picture" 
             width={150} 
             height={150} 
@@ -45,28 +30,16 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
             <p>{user.address.city}, {user.address.state}, {user.address.zip}</p>
             <p>{user.address.country}</p>
           </div>
-          {user.orders ? (
-            <div className="text-gray-400 mb-2">
-              <strong>Orders:</strong>
-              <ul className="list-disc list-inside pl-4">
-                {user.orders.map((order, index) => (
-                  <li key={index}>{order}</li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <div className="text-gray-400 mb-2"><strong>Orders:</strong> No orders</div>
-          )}
         </div>
       </div>
     </div>
   );
 };
 
-const Page = () => {
-  const { user, signOut } = useAuth();
-
-  if (!user) {
+const ProfilePage: React.FC = () => {
+  const { user, loading, signOut } = useAuth();
+  const router = useRouter();
+  if (loading) {
     return (
       <Layout>
         <div className="h-screen flex items-center justify-center">
@@ -76,15 +49,25 @@ const Page = () => {
     );
   }
 
+  if (!user) {
+    router.push('/login');
+    return;
+  }
+
   return (
     <Layout>
       <div className="p-4 sm:p-6 lg:p-8 bg-gray-800 min-h-screen">
         <h2 className="text-4xl text-white font-bold text-center mb-10">Profile Page</h2>
         <UserDetails user={user} />
       </div>
-      <button onClick={signOut}>Sign out</button>
+      <button 
+        onClick={signOut}
+        className="fixed bottom-4 right-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg shadow-lg"
+      >
+        Sign out
+      </button>
     </Layout>
   );
 };
 
-export default Page;
+export default ProfilePage;

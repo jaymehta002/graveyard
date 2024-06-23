@@ -29,15 +29,15 @@ const Navbar: React.FC = () => {
               <Link href="/" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
                 Home
               </Link>
-              <Link href="/men" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
-                Men
+              <Link href="/products/all" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
+                Shop
               </Link>
-              <Link href="/women" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
-                Women
+               <Link href="/contact" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
+                Contact
               </Link>
-              <Link href="/kids" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
+              {/* <Link href="/kids" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
                 Kids
-              </Link>
+              </Link> */}
               <Link href="/cart" className="relative text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium">
                 <FaShoppingCart className="text-lg" />
                 {cartCount > 0 && (

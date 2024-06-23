@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Layout from '@/template/DefaultLayout';
-import usePaymentStore from '@/store/paymentStore';
-import { FaLock, FaCreditCard, FaShoppingCart } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-import useCartStore from '@/store/cartStore';
+import LoadingSpinner from '@/components/Loader/loader';
+import useAuth from '@/hooks/useAuth';
 import useCart from '@/hooks/useCart';
+import usePaymentStore from '@/store/paymentStore';
+import { useOrderStore } from '@/store/orderStore';
+import Layout from '@/template/DefaultLayout';
+import { useSearchParams } from 'next/navigation';
+import React, { Suspense, useEffect, useState, useCallback } from 'react';
+import { FaCreditCard, FaLock, FaShoppingCart } from 'react-icons/fa';
 
 interface PaymentItem {
   productId: string;
@@ -24,43 +25,35 @@ interface PaymentDetails {
 }
 
 const PaymentPageContent: React.FC = () => {
+  const { user, loading: authLoading } = useAuth();
   const searchParams = useSearchParams();
   const { paymentDetails, setPaymentDetails, savePaymentDetails } = usePaymentStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [razorpayLoaded, setRazorpayLoaded] = useState<boolean>(false);
   const [orderPlaced, setOrderPlaced] = useState<boolean>(false);
-  // const router = useRouter();
-  const {clearCart} = useCart();
-  useEffect(() => {
-    const fetchAndStoreDetails = async () => {
-      const detailsString = searchParams.get('details');
-      if (!detailsString) {
-        setError('No payment details provided');
-        return;
-      }
+  const { clearCart } = useCart();
+  const { addOrder } = useOrderStore();
 
-      try {
-        const details = JSON.parse(decodeURIComponent(detailsString));
-        const updatedDetails = {
-          ...details,
-          date: new Date(),
-          // userId: user.id // Uncomment when user authentication is implemented
-        };
-        setPaymentDetails(updatedDetails);
-        await savePaymentDetails(updatedDetails);
-      } catch (err) {
-        console.error('Error processing payment details:', err);
-        setError('Invalid payment details');
-      }
-    };
-    fetchAndStoreDetails();
-    loadRazorpayScript();
+  const fetchAndStoreDetails = useCallback(async () => {
+    const detailsString = searchParams.get('details');
+    if (!detailsString) {
+      setError('No payment details provided');
+      return;
+    }
 
-    return () => {
-      const script = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
-      if (script) document.body.removeChild(script);
-    };
+    try {
+      const details = JSON.parse(decodeURIComponent(detailsString));
+      const updatedDetails = {
+        ...details,
+        date: new Date(),
+      };
+      setPaymentDetails(updatedDetails);
+      await savePaymentDetails(updatedDetails);
+    } catch (err) {
+      console.error('Error processing payment details:', err);
+      setError('Invalid payment details');
+    }
   }, [searchParams, setPaymentDetails, savePaymentDetails]);
 
   const loadRazorpayScript = () => {
@@ -71,7 +64,20 @@ const PaymentPageContent: React.FC = () => {
     document.body.appendChild(script);
   };
 
-  if(!paymentDetails) return null;
+  useEffect(() => {
+    fetchAndStoreDetails();
+    loadRazorpayScript();
+
+    return () => {
+      const script = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (script) document.body.removeChild(script);
+    };
+  }, [fetchAndStoreDetails]);
+
+  if (authLoading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!paymentDetails || !razorpayLoaded) return <LoadingMessage />;
+  if (orderPlaced) return <OrderPlacedMessage />;
 
   const handlePayment = async () => {
     if (!paymentDetails || !razorpayLoaded) return;
@@ -85,7 +91,6 @@ const PaymentPageContent: React.FC = () => {
         const options = createRazorpayOptions(order);
         const razorpay = new (window as any).Razorpay(options);
         razorpay.open();
-
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
@@ -118,12 +123,12 @@ const PaymentPageContent: React.FC = () => {
     order_id: order.id,
     handler: handlePaymentSuccess,
     prefill: {
-      name: 'Customer Name',
-      email: 'customer@example.com',
-      contact: '9999999999',
+      name: user?.name || 'Customer Name',
+      email: user?.email || 'customer@example.com',
+      contact: user?.phone || '9999999999',
     },
-    notes: { 
-      orderDetails: JSON.stringify(paymentDetails.items)
+    notes: {
+      orderDetails: JSON.stringify(paymentDetails.items),
     },
     theme: { color: '#F97316' },
   });
@@ -132,12 +137,39 @@ const PaymentPageContent: React.FC = () => {
     console.log('Payment successful', response);
     setOrderPlaced(true);
     clearCart();
-    // Here you can add logic to save the order to your database
-  };
 
-  if (error) return <ErrorMessage message={error} />;
-  if (!paymentDetails || !razorpayLoaded) return <LoadingMessage />;
-  if (orderPlaced) return <OrderPlacedMessage />;
+    if (user && paymentDetails) {
+      const updatedOrderDetails = {
+        uid: user.uid,
+        products: paymentDetails.items.map((item: any) => ({
+          pid: item.productId,
+          name: item.productName,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+        })),
+        total: paymentDetails.totalPrice,
+        status: 'PAID',
+        date: new Date().toISOString(),
+        address: user.address,
+        payment: {
+          method: 'Razorpay',
+          transaction: response.razorpay_payment_id,
+        },
+      };
+
+      try {
+        await addOrder(updatedOrderDetails);
+        const updatedDetails = {
+          ...paymentDetails,
+          date: new Date(),
+        };
+        await savePaymentDetails(updatedDetails);
+      } catch (error) {
+        console.error('Error saving order:', error);
+      }
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12 bg-gray-50 min-h-screen">

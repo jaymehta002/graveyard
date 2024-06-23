@@ -13,6 +13,9 @@ const Sidebar = () => {
     { href: '/admin/products/list', label: 'View All Products' },
     { href: '/admin/orders', label: 'Orders' },
     { href: '/admin/users/list', label: 'Users' },
+    { href: '/admin/content', label: 'Content'},
+    { href: '/admin/contact', label: 'Contact Form submission'},
+    // { href: '/admin/settings', label: 'Settings' },
   ];
 
   const toggleSidebar = () => {
@@ -29,7 +32,7 @@ const Sidebar = () => {
       </button>
 
       <div className={`fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 z-40`}>
-        <h2 className="text-2xl font-bold font-serif p-4">GRAVEYARD</h2>
+        <h2 className="text-2xl font-bold font-serif p-4"><Link href='/'>GRAVEYARD</Link></h2>
         <ul className='mt-12'>
           {links.map((link) => (
             <li key={link.href} className="mb-4">

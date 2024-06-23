@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Product } from '@/types/product';
 import { db } from '@/config/firebase';
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc, FirestoreError } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc, FirestoreError, getDoc } from 'firebase/firestore';
 
 type ProductStore = {
     products: Product[];
@@ -11,6 +11,8 @@ type ProductStore = {
     addProduct: (product: Omit<Product, 'pid'>) => Promise<void>;
     deleteProduct: (productId: string) => Promise<void>;
     editProduct: (updatedProduct: Product) => Promise<void>;
+    // addReview: (productId: string, review: Omit<Product['reviews'][0], 'uid'>) => Promise<void>;
+    addReview: (productId: string, review: { uid: string; name: string; review: string; rating: number; image?: string[]}) => Promise<void>;
 };
 
 export const useProductStore = create<ProductStore>((set, get) => ({
@@ -79,6 +81,44 @@ export const useProductStore = create<ProductStore>((set, get) => ({
             set({ error: (error as FirestoreError).message, isLoading: false });
             // Revert optimistic update
             get().fetchProducts();
+        }
+    },
+    addReview: async (productId: string, review: { uid: string; name: string; review: string; rating: number; image?: string[] }) => {
+        set({ isLoading: true, error: null });
+        try {
+            const productRef = doc(db, 'products', productId);
+            const productSnapshot = await getDoc(productRef);
+            
+            if (productSnapshot.exists()) {
+                const product = productSnapshot.data() as Product;
+                const updatedReviews = [...(product.reviews || []), review];
+
+                const totalRating = updatedReviews.reduce((sum, review) => sum + review.rating, 0);
+                const averageRating = totalRating / updatedReviews.length;
+
+                const newRating = {
+                    average: averageRating,
+                    count: updatedReviews.length
+                };
+                
+                // Update the product in Firestore
+                await updateDoc(productRef, { rating: newRating ,reviews: updatedReviews });
+                
+                // Update the local state
+                set(state => ({
+                    products: state.products.map(p => 
+                        p.pid === productId 
+                            ? { ...p, reviews: updatedReviews }
+                            : p
+                    ),
+                    isLoading: false
+                }));
+            } else {
+                throw new Error('Product not found');
+            }
+        } catch (error) {
+            console.error('Error adding review: ', error);
+            set({ error: (error as FirestoreError).message, isLoading: false });
         }
     },
 }));

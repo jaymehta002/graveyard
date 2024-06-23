@@ -1,5 +1,3 @@
-// src/hooks/useAuth.ts
-
 import { useState, useEffect } from 'react';
 import { 
   User as FirebaseUser,
@@ -10,32 +8,17 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth, db } from '@/config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-
-export type Address = {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-  zip: string;
-};
-
-export type User = {
-  uid: string;
-  name: string;
-  phone: string;
-  email: string;
-  profilePic: string;
-  address: Address;
-  orders: string[];
-};
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import User from '@/types/user';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
+      setLoading(true);
       if (firebaseUser) {
         try {
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
@@ -51,7 +34,6 @@ export function useAuth() {
               orders: userData.orders
             });
           } else {
-            // Handle case where the user document does not exist
             const defaultUser: User = {
               uid: firebaseUser.uid,
               email: firebaseUser.email || '',
@@ -68,6 +50,11 @@ export function useAuth() {
               orders: []
             };
             setUser(defaultUser);
+            const adminRef = collection(db, "admin");
+            const adminSnapshot = await getDocs(adminRef);
+            const data = adminSnapshot.docs.map(doc => doc.data());
+            const isAdmin = data.some(admin => admin.email === defaultUser.email);
+            setIsAdmin(isAdmin);
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -113,6 +100,7 @@ export function useAuth() {
   return {
     user,
     loading,
+    isAdmin,
     signUp,
     signIn,
     signOut: signOutUser

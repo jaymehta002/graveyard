@@ -65,7 +65,7 @@ const Default = ({ children }: any) => {
       {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-50 z-30 lg:hidden" onClick={toggleSidebar}></div>} */}
 
       {/* Main Content */}
-      <main className="flex-grow lg:ml-64 p-6 bg-gray-100">
+      <main className="flex-grow lg:ml-64 bg-gray-100">
         {children}
       </main>
     </div>

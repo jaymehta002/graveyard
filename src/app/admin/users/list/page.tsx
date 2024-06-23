@@ -1,40 +1,37 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Default from '../../Layouts/Default';
-import { User } from '@/types/user';
 import { useUserStore } from '@/store/userStore';
+import { User } from '@/types/user';
+import React from 'react';
 import { FaTrash } from 'react-icons/fa';
-import DeletePrompt from '@/components/Modals/DeleteUser';
+import Default from '../../Layouts/Default';
 
 const UsersPage: React.FC = () => {
   const users: User[] = useUserStore((state) => state.users);
-  const fetchUsers = useUserStore((state) => state.fetchUsers);
   const deleteUser = useUserStore((state) => state.deleteUser);
+  const loading = useUserStore((state) => state.isLoading);
 
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  if (loading) {
+    return (
+      <Default>
+        <div className="h-screen flex items-center justify-center">
+          <p className="text-white text-lg">Loading...</p>
+        </div>
+      </Default>
+    );
+  }
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  if(!users) {
+    return (
+      <Default>
+        <div className="h-screen flex items-center justify-center">
+          <p className="text-white text-lg">No users found</p>
+        </div>
+      </Default>
+    );
+  }
 
-  const handleDeleteClick = (user: User) => {
-    setSelectedUser(user);
-    setIsDeleteModalOpen(true);
-  };
 
-  const handleCloseDeleteModal = () => {
-    setSelectedUser(null);
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleConfirmDelete = () => {
-    if (selectedUser) {
-      deleteUser(selectedUser.uid);
-      handleCloseDeleteModal();
-    }
-  };
 
   return (
     <Default>
@@ -52,7 +49,7 @@ const UsersPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {users.map((user) => (
+              {users && users.map((user) => (
                 <tr key={user.uid} className="hover:bg-gray-100 transition duration-300">
                   <td className="py-3 px-4 whitespace-nowrap">{user.name}</td>
                   <td className="py-3 px-4">{user.email}</td>
@@ -63,7 +60,7 @@ const UsersPage: React.FC = () => {
                   <td className="py-3 px-4">
                     <button
                       className="text-red-500 hover:text-red-700 focus:outline-none"
-                      onClick={() => handleDeleteClick(user)}
+                      onClick={() => deleteUser(user.uid)}
                     >
                       <FaTrash />
                     </button>
@@ -74,12 +71,6 @@ const UsersPage: React.FC = () => {
           </table>
         </div>
       </div>
-
-      <DeletePrompt
-        isOpen={isDeleteModalOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-      />
     </Default>
   );
 };

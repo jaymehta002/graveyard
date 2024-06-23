@@ -6,6 +6,7 @@ export type Order = {
         name: string
         price: number
         quantity: number
+        size: string
     }[]
     total: number
     status: string
@@ -17,11 +18,11 @@ export type Order = {
         country: string
         zip: string 
     }
-    payment: {
+    payment?: {
         method: string
         transaction: string
     }
-    delivery: {
+    delivery?: {
         method: string
         tracking: string
         date: string

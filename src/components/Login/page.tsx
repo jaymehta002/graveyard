@@ -31,6 +31,7 @@ const LoginPage: React.FC = () => {
     setError('');
     try {
       await signIn(email, password);
+      console.log('User:', user);
       router.push('/');
     } catch (err) {
       setError('Failed to log in. Please check your credentials.');

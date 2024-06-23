@@ -8,25 +8,29 @@ import { FaTrash, FaPlus, FaMinus, FaSort } from 'react-icons/fa';
 import useCart from '@/hooks/useCart';
 import { CartItem } from "@/store/cartStore";
 import useAuth from "@/hooks/useAuth";
+import Address from "@/components/address/Address";
+import User from "@/types/user";
 
 const Page = () => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <CartComponent />
+      <CartComponent/>
     </Suspense>
   )
 }
 
-const CartComponent: React.FC = () => {
-  const {user} = useAuth();
+const CartComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { items, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  // console.log('Items:', items);
   const [mounted, setMounted] = useState(false);
 
   const sortBy = searchParams?.get('sortBy') || 'name';
   const sortOrder = searchParams?.get('sortOrder') || 'asc';
+  const {user, loading} = useAuth();
 
+  // console.log('User:', user ?? 'No user found');
   const sortedItems = useMemo(() => {
     if (!mounted) return [];
     return [...items].sort((a, b) => {
@@ -41,9 +45,18 @@ const CartComponent: React.FC = () => {
     setMounted(true);
   }, []);
 
+  if(loading) {
+    return <LoadingSpinner />
+  }
+  
   if (!mounted) {
     return <LoadingSpinner />;
   }
+  if(!user){
+    router.push('/login');
+  }
+
+  // console.log('User:', user ?? 'No user found');
 
   const handleSortChange = (newSortBy: string) => {
     const newSortOrder = newSortBy === sortBy && sortOrder === 'asc' ? 'desc' : 'asc';
@@ -57,12 +70,11 @@ const CartComponent: React.FC = () => {
         productName: item.product.name,
         price: item.product.price,
         quantity: item.quantity,
-        size: item.product.sizes || 'N/A'
+        size: item.selectedSize || 'N/A'
       })),
       totalItems,
       totalPrice
     };
-
     const queryString = encodeURIComponent(JSON.stringify(paymentDetails));
     router.push(`/payment?details=${queryString}`);
   };
@@ -74,6 +86,13 @@ const CartComponent: React.FC = () => {
   //   });
   // };
 
+  const sampleAddress = {
+    street: '1234 Elm St',
+    city: 'Springfield',
+    state: 'IL',
+    country: 'USA',
+    zip: '62701'
+  }
   return (
     <Layout>
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-gray-100 py-16 px-4 sm:px-6 lg:px-8">
@@ -82,8 +101,10 @@ const CartComponent: React.FC = () => {
           {items.length === 0 ? (
             <p className="text-center text-gray-400 text-xl">Your cart is empty.</p>
           ) : (
+            <>
             <div className="lg:grid lg:grid-cols-3 lg:gap-8">
               <div className="lg:col-span-2 space-y-6">
+              <Address user={user} />
                 <div className="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700">
                   <div className="flex justify-end mb-6 space-x-4">
                     <button 
@@ -108,7 +129,8 @@ const CartComponent: React.FC = () => {
                       </div>
                       <div className="flex-grow">
                         <h2 className="text-xl font-semibold mb-2">{item.product.name}</h2>
-                        <p className="text-gray-400 mb-1">Quantity: {item.quantity}</p>
+                        <p className="text-gray-400 mb-1">Quantity: {item.quantity} Size: {item.selectedSize}</p>
+                        <p className="text-gray-400 mb-1"></p>
                         <p className="text-gray-400 mb-3 font-mono">Price: ₹{item.product.price}</p>
                         <div className="flex items-center space-x-3">
                           <button
@@ -176,6 +198,7 @@ const CartComponent: React.FC = () => {
                 </div>
               </div>
             </div>
+          </>
           )}
         </div>
       </div>

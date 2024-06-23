@@ -12,13 +12,16 @@ const Dashboard = () => {
   const users = useUserStore((state) => state.users);
   const orders = useOrderStore((state) => state.orders);
 
+  const topProducts = products.sort((a, b) => b.rating.average - a.rating.average).slice(0, 5);
+
+  const soldPid = orders.map((order) => order.products.map((product) => product.pid));
 
   const productChartData = {
     labels: products.map((product) => product.name),
     datasets: [
       {
         label: 'Products',
-        data: products.map((product) => product.rating.average),
+        data: topProducts.map((product) => product.rating.average),
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
     ],

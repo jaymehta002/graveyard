@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartCount, setCartCount] = useState(3); // Example count, replace with actual state management
   const cart = useCartStore((state) => state.items);
-  const {user} = useAuth();
+  const {user, isAdmin} = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -35,9 +35,9 @@ const Navbar: React.FC = () => {
                <Link href="/contact" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
                 Contact
               </Link>
-              {/* <Link href="/kids" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
-                Kids
-              </Link> */}
+              {isAdmin && <Link href="/admin/dashboard" className="text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">
+                Admin
+              </Link>}
               <Link href="/cart" className="relative text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium">
                 <FaShoppingCart className="text-lg" />
                 {cartCount > 0 && (

@@ -38,6 +38,7 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
 
 const ProfilePage: React.FC = () => {
   const { user, loading, signOut } = useAuth();
+  // console.log(user, loading, "user, loading");
   const router = useRouter();
   if (loading) {
     return (

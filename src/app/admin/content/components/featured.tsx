@@ -32,7 +32,7 @@ const ImageUpload: React.FC = () => {
         const base64String = reader.result as string;
         try {
           await pushToFeatured(base64String);
-          console.log('Image uploaded and added to featured.');
+          // console.log('Image uploaded and added to featured.');
           setImage(null);
           setPreview(null);
         } catch (error) {

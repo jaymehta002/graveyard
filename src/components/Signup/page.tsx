@@ -55,7 +55,7 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+    <div className="py-12  bg-gray-900 flex items-center justify-center">
       <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
           <h1 className="text-white text-3xl font-serif font-bold">GRAVEYARD</h1>

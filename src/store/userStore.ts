@@ -35,7 +35,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
           email: userData.email,
           phone: userData.phone,
           address: userData.address,
-          // Ensure to map all required fields from your User type
         } as User;
       });
   
@@ -85,7 +84,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         isLoading: false
       }));
   
-      console.log('Order added successfully to user');
+      // console.log('Order added successfully to user');
     } catch (error) {
       console.error('Error adding order to user: ', error);
       set({ error: (error as FirestoreError).message, isLoading: false });

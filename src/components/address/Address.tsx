@@ -24,9 +24,9 @@ const Address: React.FC<AddressProps> = ({ user }) => {
   const updateAddress = async (updatedAddress: AddressType) => {
     try {
       const userRef = doc(db, 'users', user.uid);
-      console.log('Updating address for user:', user.uid);
+      // console.log('Updating address for user:', user.uid);
       await updateDoc(userRef, { address: updatedAddress });
-      console.log('Address updated successfully');
+      // console.log('Address updated successfully');
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating address:', error);

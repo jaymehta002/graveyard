@@ -63,6 +63,7 @@ const UserDetailsRoute: React.FC = () => {
           name,
           gender,
           age,
+          email: user.email,
           phone,
           dob,
           profilePic: user.photoURL || '',

@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
     setError('');
     try {
       await signIn(email, password);
-      console.log('User:', user);
+      // console.log('User:', user);
       router.push('/');
     } catch (err) {
       setError('Failed to log in. Please check your credentials.');
@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 sm:px-6 lg:px-8">
+    <div className="py-12 flex items-center justify-center bg-gray-900 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
           <FaSkull className="text-orange-500 mx-auto mb-4 text-5xl" />

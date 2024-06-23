@@ -34,7 +34,7 @@ const usePaymentStore = create<PaymentStoreState>((set) => ({
   savePaymentDetails: async (details) => {
     try {
       const paymentRef = await addDoc(collection(db, 'payments'), details);
-      console.log('Payment details saved with ID: ', paymentRef.id);
+      // console.log('Payment details saved with ID: ', paymentRef.id);
       return paymentRef.id; // Optionally return the ID of the newly created payment document
     } catch (error) {
       console.error('Error saving payment details: ', error);

@@ -134,7 +134,7 @@ const PaymentPageContent: React.FC = () => {
   });
 
   const handlePaymentSuccess = async (response: any) => {
-    console.log('Payment successful', response);
+    // console.log('Payment successful', response);
     setOrderPlaced(true);
     clearCart();
 

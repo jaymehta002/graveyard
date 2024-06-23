@@ -7,9 +7,12 @@ import useProductStore from '@/store/productStore';
 import Layout from '@/template/DefaultLayout';
 import { useAuth } from '@/hooks/useAuth';
 import useCartStore from '@/store/cartStore';
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FaStar, FaShoppingCart, FaHeart } from 'react-icons/fa';
 import LoadingSpinner from '@/components/Loader/loader';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 interface PageProps {
   params: {
     id: string;
@@ -28,7 +31,7 @@ const Page = ({ params }: PageProps) => {
   const router = useRouter();
   const products = useProductStore((state) => state.products);
   const loading = useProductStore((state) => state.isLoading);
-  const product = products.find((product) => product.pid === params.id) as Product;
+  const product = products.find((product) => product.pid === params.id) as Product | undefined;
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
   const [currentImage, setCurrentImage] = useState(0);
   const [reviewText, setReviewText] = useState('');
@@ -37,24 +40,32 @@ const Page = ({ params }: PageProps) => {
   const { user } = useAuth();
   const addToCart = useCartStore((state) => state.addToCart);
   const addReview = useProductStore((state) => state.addReview);
-  
-  if(loading) return <LoadingSpinner />;
 
+  if (loading) return <LoadingSpinner />;
 
-const handleAddToCart = () => {
-  if (product.stock > 0) {
-    const cartItem = {
-      product: {
-        ...product,
-        sizes: [selectedSize]
-      },
-      selectedSize: selectedSize,
-      quantity: 1
-    };
-    console.log(cartItem);
-    addToCart(product, selectedSize);
-  }
-};
+  if (!product) return <div>Product not found</div>;
+
+  const handleAddToCart = async () => {
+    if (product.stock > 0) {
+      const cartItem = {
+        product: {
+          ...product,
+          sizes: [selectedSize]
+        },
+        selectedSize: selectedSize,
+        quantity: 1
+      };
+      await addToCart(product, selectedSize);
+      toast.success('Product added to cart', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  };
 
   const handleReviewSubmit = async (e: any) => {
     if (!user) return;
@@ -287,6 +298,7 @@ const handleAddToCart = () => {
             )}
           </motion.div>
         </div>
+        <ToastContainer />
       </div>
     </Layout>
   );

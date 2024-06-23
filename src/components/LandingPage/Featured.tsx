@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Image from 'next/image';
@@ -53,7 +53,7 @@ const FeaturedSection: React.FC = () => {
             <div key={index} className="relative">
               <Image 
                 src={item} 
-                alt={item} 
+                alt={`Featured image ${index + 1}`} 
                 width={1920} 
                 height={1080} 
                 className="object-cover"

@@ -1,14 +1,17 @@
 'use client'
 import React, { useState } from 'react';
 import Default from '../../Layouts/Default';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaStar, FaTrash } from 'react-icons/fa';
 import EditProductModal from '@/components/Modals/Editproduct';
 import { Product } from '@/types/product';
 import { useProductStore } from '@/store/productStore';
+import { CiStar } from 'react-icons/ci';
+import useContentStore from '@/store/contentStore';
 
 const ProductsPage: React.FC = () => {
   const products: Product[] = useProductStore((state) => state.products);
   const deleteProduct = useProductStore((state) => state.deleteProduct);
+  const updateStar = useContentStore((state) => state.updateStar);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -69,6 +72,13 @@ const ProductsPage: React.FC = () => {
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex space-x-2">
+                      <button
+                        className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                        onClick={() => updateStar(product.pid)}
+                      >
+                        {/* <FaStar /> */}
+                        <CiStar />
+                      </button>
                       <button
                         className="text-blue-500 hover:text-blue-700 focus:outline-none"
                         onClick={() => handleEditClick(product)}

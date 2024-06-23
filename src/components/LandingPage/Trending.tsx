@@ -12,7 +12,9 @@ const TrendingSection: React.FC = () => {
   const router = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
   const products = useProductStore((state) => state.products);
+  const loading = useProductStore((state) => state.isLoading);
   const newDrops = products.slice(0, 5);
+
 
   const handleProductClick = (pid: string) => {
     router.push(`/products/${pid}`);

@@ -9,6 +9,7 @@ import Layout from '@/template/DefaultLayout';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState, useCallback } from 'react';
 import { FaCreditCard, FaLock, FaShoppingCart } from 'react-icons/fa';
+import Link from 'next/link';
 
 interface PaymentItem {
   productId: string;
@@ -234,6 +235,7 @@ const OrderPlacedMessage: React.FC = () => (
     <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-8 rounded-lg max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Order Placed Successfully</h1>
       <p className="text-xl">Your order has been successfully placed. Thank you for shopping!</p>
+      <Link href='/'>Back to home</Link>
     </div>
   </div>
 );

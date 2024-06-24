@@ -15,22 +15,22 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4 text-orange-500">Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
+                <a href="/" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
+                <a href="/products/all" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   Shop
                 </a>
               </li>
-              <li>
-                <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
+              {/* <li>
+                <a href="/about" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   About
                 </a>
-              </li>
+              </li> */}
               <li>
-                <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
+                <a href="/contact" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   Contact
                 </a>
               </li>
@@ -40,7 +40,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4 text-orange-500">Support</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
+                <a href="/terms-conditions" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   FAQ
                 </a>
               </li>
@@ -65,25 +65,25 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4 text-orange-500">Follow Us</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
+                <a href="https://www.instagram.com/graveyard_wear/" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   Instagram
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   Twitter
                 </a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   Facebook
                 </a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a href="#" className="text-sm hover:text-orange-500 transition-colors duration-300">
                   TikTok
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

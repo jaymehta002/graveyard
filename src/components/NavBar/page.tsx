@@ -75,20 +75,20 @@ const Navbar: React.FC = () => {
             <Link href="/" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
               Home
             </Link>
-            <Link href="/men" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
-              Men
+            <Link href="/products/all" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
+              shop
             </Link>
-            <Link href="/women" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
-              Women
+            <Link href="/contact" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
+              contact
             </Link>
-            <Link href="/kids" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
-              Kids
-            </Link>
+            {isAdmin && (<Link href="/admin/dashboard" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">
+              Admin
+            </Link>)}
             <Link href="/cart" className="text-gray-300 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium relative">
               <FaShoppingCart className="inline-block mr-2" />
               Cart
               {cartCount > 0 && (
-                <span className="absolute -top-2 right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-orange-500 rounded-full">
+                <span className="absolute top-4 right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-orange-500 rounded-full">
                   {cart.length}
                 </span>
               )}

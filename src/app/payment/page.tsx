@@ -107,7 +107,7 @@ const PaymentPageContent: React.FC = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount: paymentDetails.totalPrice,
+        amount: paymentDetails.totalPrice + 70,
         currency: 'INR',
         receipt: `receipt_${Date.now()}`,
       }),

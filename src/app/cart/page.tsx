@@ -175,7 +175,7 @@ const CartComponent = () => {
                     </p>
                     <p className="flex justify-between text-gray-400">
                       <span>Shipping:</span>
-                      <span className="font-mono">₹0.00</span>
+                      <span className="font-mono">₹70.00</span>
                     </p>
                     <div className="border-t border-gray-700 pt-4">
                       <p className="flex justify-between text-xl font-semibold">

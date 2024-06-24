@@ -73,7 +73,7 @@ const Sale = () => {
               {/* <li>✓ Tags: {product.tags.join(', ')}</li> */}
             </ul>
             <button onClick={() => handleRedirect(product.pid)} className="bg-orange-500 text-white py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300">
-              Add to Cart
+              View Details
             </button>
           </div>
         </div>

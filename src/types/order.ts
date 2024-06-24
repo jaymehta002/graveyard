@@ -11,6 +11,7 @@ export type Order = {
     total: number
     status: string
     date: string
+    shippingStatus: string
     address: {
         street: string
         city: string

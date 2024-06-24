@@ -46,6 +46,17 @@ const Page = ({ params }: PageProps) => {
   if (!product) return <div>Product not found</div>;
 
   const handleAddToCart = async () => {
+    if(selectedSize === '') {
+      toast.error('Please select a size', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
     if (product.stock > 0) {
       const cartItem = {
         product: {
@@ -147,15 +158,13 @@ const Page = ({ params }: PageProps) => {
               <h1 className="text-4xl md:text-5xl font-bold text-orange-500">{product.name}</h1>
               <p className="text-gray-300 text-lg">{product.description}</p>
               <div className="flex items-center space-x-4">
-                <span className="text-3xl font-bold text-orange-500">${product.price}</span>
+                <span className="text-3xl font-bold text-orange-500">₹{product.price}</span>
                 <div className="flex items-center bg-orange-500 rounded-full px-3 py-1">
                   <FaStar className="text-yellow-300 mr-1" />
                   <span className="font-semibold">{product.rating.average}</span>
                   <span className="ml-1 text-sm">({product.rating.count})</span>
                 </div>
               </div>
-
-              {/* Size Selector */}
               <div>
                 <h3 className="text-xl font-semibold mb-3">Size:</h3>
                 <div className="flex flex-wrap gap-3">
@@ -177,14 +186,6 @@ const Page = ({ params }: PageProps) => {
                 </div>
               </div>
 
-              {/* Stock Status */}
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className={product.stock > 0 ? 'text-green-500' : 'text-red-500'}>
-                  {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-                </span>
-              </div>
-
               {/* Action Buttons */}
               <div className="flex space-x-4">
                 <motion.button
@@ -196,13 +197,6 @@ const Page = ({ params }: PageProps) => {
                 >
                   <FaShoppingCart />
                   <span>{product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}</span>
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gray-800 text-white px-4 py-3 rounded-full hover:bg-gray-700 transition-colors"
-                >
-                  <FaHeart className="text-2xl" />
                 </motion.button>
               </div>
             </div>

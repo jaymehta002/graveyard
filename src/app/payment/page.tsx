@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState, useCallback } from 'react';
 import { FaCreditCard, FaLock, FaShoppingCart } from 'react-icons/fa';
 import Link from 'next/link';
+import useProductStore from '@/store/productStore';
 
 interface PaymentItem {
   productId: string;
@@ -35,7 +36,8 @@ const PaymentPageContent: React.FC = () => {
   const [orderPlaced, setOrderPlaced] = useState<boolean>(false);
   const { clearCart } = useCart();
   const { addOrder } = useOrderStore();
-
+  const editProduct = useProductStore((state) => state.editProduct);
+  const products = useProductStore((state) => state.products);
   const fetchAndStoreDetails = useCallback(async () => {
     const detailsString = searchParams.get('details');
     if (!detailsString) {
@@ -119,13 +121,13 @@ const PaymentPageContent: React.FC = () => {
     key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     amount: order.amount,
     currency: order.currency,
-    name: 'Your Company Name',
+    name: 'GRAVEYARD',
     description: `Payment for ${paymentDetails.totalItems} items`,
     order_id: order.id,
     handler: handlePaymentSuccess,
     prefill: {
-      name: user?.name || 'Customer Name',
-      email: user?.email || 'customer@example.com',
+      name: user?.name || 'Graveyard',
+      email: user?.email || 'Graveyard@gmail.com',
       contact: user?.phone || '9999999999',
     },
     notes: {
@@ -157,7 +159,22 @@ const PaymentPageContent: React.FC = () => {
           method: 'Razorpay',
           transaction: response.razorpay_payment_id,
         },
+        shippingStatus: 'PENDING',
       };
+
+      const productIds = paymentDetails.items.map((item: any) => item.productId);
+      const filteredProducts = products.filter((product) => productIds.includes(product.pid));
+
+      filteredProducts.forEach((product) => {
+        const item = paymentDetails.items.find((item: any) => item.productId === product.pid);
+        if (item) {
+          const updatedProduct = {
+            ...product,
+            stock: product.stock - item.quantity,
+          };
+          editProduct(updatedProduct);
+        }
+      });
 
       try {
         await addOrder(updatedOrderDetails);
@@ -165,11 +182,12 @@ const PaymentPageContent: React.FC = () => {
           ...paymentDetails,
           date: new Date(),
         };
+
         await savePaymentDetails(updatedDetails);
       } catch (error) {
         console.error('Error saving order:', error);
       }
-    }
+    } 
   };
 
   return (

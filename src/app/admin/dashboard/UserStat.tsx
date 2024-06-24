@@ -24,6 +24,12 @@ const Stats = () => {
     count,
   }));
 
+  const deliveryData = orders.map((order) => order.shippingStatus);
+  const shippingData: { [key: string]: number } = deliveryData.reduce((acc: { [key: string]: number }, status: any) => {
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {});
+
   const getProductName = (pid: string) => {
     const product = products.find((product) => product.pid === pid);
     return product ? product.name : 'Unknown';
@@ -133,6 +139,23 @@ const Stats = () => {
     },
   }
 
+
+  const shippingGraph = {
+    labels: ['Delivered', 'Shipped', 'Processing', 'Cancelled'],
+    datasets: [
+      {
+        label: 'Shipping Status',
+        data: Object.values(shippingData),
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 205, 86, 0.6)',
+        ],
+      },
+    ],
+  }
+
   return (
     <>
       <div className="p-2 sm:p-4">
@@ -160,6 +183,19 @@ const Stats = () => {
             <h2 className="text-lg sm:text-xl font-semibold mb-2">Revenue</h2>
             <div className="h-40 sm:h-48">
               <Doughnut data={revenueChartData} options={{
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'bottom',
+                  },
+                },
+              }} />
+            </div>
+          </div>
+          <div className="bg-white shadow-md rounded p-2 sm:p-4">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2">Orders Shipping Status</h2>
+            <div className="h-40 sm:h-48">
+              <Doughnut data={shippingGraph} options={{
                 plugins: {
                   legend: {
                     display: true,

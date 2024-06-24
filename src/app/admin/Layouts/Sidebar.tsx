@@ -32,7 +32,7 @@ const Sidebar = () => {
       </button>
 
       <div className={`fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 z-40`}>
-        <h2 className="text-2xl font-bold font-serif p-4"><Link href='/'>GRAVEYARD</Link></h2>
+        <h2 className="text-2xl font-black font-serif p-4"><Link href='/'>GRAVEYARD</Link></h2>
         <ul className='mt-12'>
           {links.map((link) => (
             <li key={link.href} className="mb-4">

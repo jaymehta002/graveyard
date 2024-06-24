@@ -58,7 +58,9 @@ const SignUpPage: React.FC = () => {
     <div className="py-12  bg-gray-900 flex items-center justify-center">
       <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
-          <h1 className="text-white text-3xl font-serif font-bold">GRAVEYARD</h1>
+        <h2 className="text-gray-200 font-black text-xl font-serif flex items-center">
+              GRAVEYARD
+            </h2>
           <p className="text-gray-300">Sign up to access your account</p>
         </div>
         <form onSubmit={handleSubmit}>

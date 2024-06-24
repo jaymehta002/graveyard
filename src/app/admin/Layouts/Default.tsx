@@ -57,7 +57,7 @@ const Default = ({ children }: any) => {
           >
             <FiMenu size={24} />
           </button>
-          <span className="ml-2 font-bold">{isAdmin ? 'Admin Dashboard' : 'User Dashboard'}</span>
+          <span className="ml-8 font-bold">{isAdmin ? 'Admin Dashboard' : 'User Dashboard'}</span>
         </div>
         <div className="hidden lg:flex items-center space-x-4">
           <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

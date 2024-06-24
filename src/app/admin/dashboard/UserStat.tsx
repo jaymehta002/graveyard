@@ -112,6 +112,16 @@ const Stats = () => {
         beginAtZero: true,
         ticks: {
           stepSize: 5,
+          font: {
+            size: 10,
+          },
+        },
+      },
+      x: {
+        ticks: {
+          font: {
+            size: 10,
+          },
         },
       },
     },
@@ -121,24 +131,20 @@ const Stats = () => {
       },
     },
   };
-  const ratingStep= {
-    responsive: true,
-    maintainAspectRatio: false,
+
+  const ratingStep = {
+    ...responsiveOptions,
     scales: {
+      ...responsiveOptions.scales,
       y: {
-        beginAtZero: true,
+        ...responsiveOptions.scales.y,
         ticks: {
+          ...responsiveOptions.scales.y.ticks,
           stepSize: 1,
         },
       },
     },
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  }
-
+  };
 
   const shippingGraph = {
     labels: ['Delivered', 'Shipped', 'Processing', 'Cancelled'],
@@ -157,57 +163,75 @@ const Stats = () => {
   }
 
   return (
-    <>
-      <div className="p-2 sm:p-4">
-        <h1 className="text-xl sm:text-2xl font-bold mb-4">Dashboard</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white shadow-md rounded p-2 sm:p-4">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">Top Products</h2>
-            <div className="h-40 sm:h-48">
-              <Bar data={productChartData} options={ratingStep} />
-            </div>
+    <div className="p-2 sm:p-4 lg:p-6">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Dashboard</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+        <div className="bg-white shadow-md rounded p-2 sm:p-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Top Products</h2>
+          <div className="h-40 sm:h-48 lg:h-56">
+            <Bar data={productChartData} options={ratingStep} />
           </div>
-          <div className="bg-white shadow-md rounded p-2 sm:p-4">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">Most Sold</h2>
-            <div className="h-40 sm:h-48">
-              <Bar data={topOrderChartData} options={responsiveOptions} />
-            </div>
+        </div>
+        <div className="bg-white shadow-md rounded p-2 sm:p-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Most Sold</h2>
+          <div className="h-40 sm:h-48 lg:h-56">
+            <Bar data={topOrderChartData} options={responsiveOptions} />
           </div>
-          <div className="bg-white shadow-md rounded p-2 sm:p-4">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">Monthly Orders</h2>
-            <div className="h-40 sm:h-48">
-              <Line data={monthlyOrderChartData} options={responsiveOptions} />
-            </div>
+        </div>
+        <div className="bg-white shadow-md rounded p-2 sm:p-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Monthly Orders</h2>
+          <div className="h-40 sm:h-48 lg:h-56">
+            <Line data={monthlyOrderChartData} options={responsiveOptions} />
           </div>
-          <div className="bg-white shadow-md rounded p-2 sm:p-4">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">Revenue</h2>
-            <div className="h-40 sm:h-48">
-              <Doughnut data={revenueChartData} options={{
+        </div>
+        <div className="bg-white shadow-md rounded p-2 sm:p-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Revenue</h2>
+          <div className="h-40 sm:h-48 lg:h-56">
+            <Doughnut 
+              data={revenueChartData} 
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                   legend: {
                     display: true,
                     position: 'bottom',
+                    labels: {
+                      font: {
+                        size: 10,
+                      },
+                    },
                   },
                 },
-              }} />
-            </div>
+              }} 
+            />
           </div>
-          <div className="bg-white shadow-md rounded p-2 sm:p-4">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">Orders Shipping Status</h2>
-            <div className="h-40 sm:h-48">
-              <Doughnut data={shippingGraph} options={{
+        </div>
+        <div className="bg-white shadow-md rounded p-2 sm:p-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Orders Shipping Status</h2>
+          <div className="h-40 sm:h-48 lg:h-56">
+            <Doughnut 
+              data={shippingGraph} 
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                   legend: {
                     display: true,
                     position: 'bottom',
+                    labels: {
+                      font: {
+                        size: 10,
+                      },
+                    },
                   },
                 },
-              }} />
-            </div>
+              }} 
+            />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

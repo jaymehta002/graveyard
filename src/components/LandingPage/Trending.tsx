@@ -13,7 +13,7 @@ const TrendingSection: React.FC = () => {
   const addToCart = useCartStore((state) => state.addToCart);
   const products = useProductStore((state) => state.products);
   const loading = useProductStore((state) => state.isLoading);
-  const newDrops = products.slice(0, 5);
+  const newDrops = products.slice(0, 6);
 
 
   const handleProductClick = (pid: string) => {
@@ -40,7 +40,7 @@ const TrendingSection: React.FC = () => {
       </Link>
     </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
       {newDrops.map((card) => (
         <article
           key={card.pid}

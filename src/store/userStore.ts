@@ -1,7 +1,9 @@
 import { create } from 'zustand';
-import { User, Orders } from '@/types/user';
+import { User } from '@/types/user';
 import { collection, getDocs, deleteDoc, doc, updateDoc, getDoc, FirestoreError, arrayUnion } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { Order } from '@/types/order';
+import orders from 'razorpay/dist/types/orders';
 
 type UserStore = {
   users: User[];
@@ -89,7 +91,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       console.error('Error adding order to user: ', error);
       set({ error: (error as FirestoreError).message, isLoading: false });
     }
-  }
+  },
 }));
 
 // Ensure fetchUsers is called initially to load data

@@ -1,3 +1,5 @@
+import { Order } from './order'
+
 export type User = {
     uid: string
     name: string
@@ -5,18 +7,9 @@ export type User = {
     email: string
     profilePic: string
     address: Address
-    orders: Orders[]
+    orders: Order[]
 }
 
-export type Orders = {
-    order: {
-        id: string
-        productID: string[]
-        amount: number
-        status: string
-        date: string 
-    }
-}
 
 export type Address = {
     street: string

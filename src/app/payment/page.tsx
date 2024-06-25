@@ -11,6 +11,7 @@ import React, { Suspense, useEffect, useState, useCallback } from 'react';
 import { FaCreditCard, FaLock, FaShoppingCart } from 'react-icons/fa';
 import Link from 'next/link';
 import useProductStore from '@/store/productStore';
+import useUserStore from '@/store/userStore';
 
 interface PaymentItem {
   productId: string;
@@ -38,6 +39,7 @@ const PaymentPageContent: React.FC = () => {
   const { addOrder } = useOrderStore();
   const editProduct = useProductStore((state) => state.editProduct);
   const products = useProductStore((state) => state.products);
+  const addOrderToUser = useUserStore((state) => state.addOrderToUser);
   const fetchAndStoreDetails = useCallback(async () => {
     const detailsString = searchParams.get('details');
     if (!detailsString) {
@@ -176,14 +178,21 @@ const PaymentPageContent: React.FC = () => {
         }
       });
 
+      const userOrder = {
+        productID: updatedOrderDetails.products.map((product: any) => product.pid),
+        amount: updatedOrderDetails.total,
+        status: 'PENDING',
+        date: updatedOrderDetails.date,
+      }
+
       try {
         await addOrder(updatedOrderDetails);
         const updatedDetails = {
           ...paymentDetails,
           date: new Date(),
         };
-
-        await savePaymentDetails(updatedDetails);
+        const payId = await savePaymentDetails(updatedDetails);
+        await addOrderToUser(user.uid, {...updatedOrderDetails, oid: payId});
       } catch (error) {
         console.error('Error saving order:', error);
       }
@@ -193,23 +202,27 @@ const PaymentPageContent: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-12 bg-gray-50 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white">
+        <div className="bg-gray-800 p-6 text-white">
           <h1 className="text-3xl font-bold text-center">Complete Your Payment</h1>
         </div>
         <div className="p-8">
           <div className="flex items-center justify-center mb-8">
-            <FaShoppingCart className="text-3xl text-orange-500 mr-3" />
+            <FaShoppingCart className="text-3xl text-black mr-3" />
             <h2 className="text-2xl font-semibold">Order Summary</h2>
           </div>
           <OrderSummary items={paymentDetails.items} />
+          <div className="flex justify-between font-medium text-xl mb-8 rounded-lg">
+            <span>Shipping:</span>
+            <span>₹70.00</span>
+          </div>
           <div className="flex justify-between font-bold text-xl mb-8 p-4 bg-gray-100 rounded-lg">
             <span>Total:</span>
-            <span>₹{paymentDetails.totalPrice.toFixed(2)}</span>
+            <span>₹{(paymentDetails.totalPrice + 70).toFixed(2) }</span>
           </div>
           <button
             onClick={handlePayment}
             disabled={loading}
-            className="w-full bg-orange-500 text-white py-4 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 flex items-center justify-center text-lg font-semibold"
+            className="w-full bg-gray-500 text-white py-4 px-6 rounded-lg hover:bg-gray-600 transition-colors duration-300 flex items-center justify-center text-lg font-semibold"
           >
             {loading ? (
               'Processing...'
@@ -248,15 +261,27 @@ const LoadingMessage: React.FC = () => (
   </div>
 );
 
-const OrderPlacedMessage: React.FC = () => (
-  <div className="container mx-auto px-4 py-12 text-center">
-    <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-8 rounded-lg max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Order Placed Successfully</h1>
-      <p className="text-xl">Your order has been successfully placed. Thank you for shopping!</p>
-      <Link href='/'>Back to home</Link>
+const OrderPlacedMessage: React.FC = () => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = '/';
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return (
+    <div className="container mx-auto px-4 py-12 text-center">
+      <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-8 rounded-lg max-w-2xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4">Order Placed Successfully</h1>
+        <p className="text-xl">Your order has been successfully placed. Thank you for shopping!</p>
+        <Link href="/">Please wait or Click here.</Link>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const OrderSummary: React.FC<{ items: PaymentItem[] }> = ({ items }) => (
   <div className="mb-8">

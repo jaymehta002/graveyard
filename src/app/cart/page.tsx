@@ -169,7 +169,7 @@ const CartComponent = () => {
                     <div className="border-t border-gray-300 pt-4">
                       <p className="flex justify-between text-xl font-semibold">
                         <span>Total:</span>
-                        <span className="font-mono">₹{totalPrice}</span>
+                        <span className="font-mono">₹{totalPrice + 70}</span>
                       </p>
                     </div>
                   </div>

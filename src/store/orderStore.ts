@@ -54,6 +54,9 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
     set({ isLoading: true });
     try {
       await updateDoc(doc(db, 'orders', updatedOrder.oid), updatedOrder);
+      await updateDoc(doc(db, 'users', updatedOrder.uid), {
+        orders: get().orders.map(order => order.oid === updatedOrder.oid ? { ...order, shippingStatus: updatedOrder.shippingStatus } : order )
+        })
       get().fetchOrders();
     } catch (error) {
       console.error('Error updating order: ', error);

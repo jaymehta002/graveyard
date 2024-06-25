@@ -14,7 +14,6 @@ const OrderTable = () => {
   const users = useUserStore((state) => state.users);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [editingStatus, setEditingStatus] = useState<string | null>(null);
-
   const shippingStatusOptions = ['PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
   const toggleOrderDetails = (orderId: string) => {
@@ -35,7 +34,7 @@ const OrderTable = () => {
       ...order,
       shippingStatus: newStatus
     }
-    updateOrder(newOrder);
+    updateOrder(newOrder); 
     setEditingStatus(null);
   }
 

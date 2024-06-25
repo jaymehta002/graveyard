@@ -1,22 +1,22 @@
-'use client';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { FaSkull, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { auth } from '@/config/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
-import UserDetailsRoute from '../auth/UserDetailsRoute';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import useAuth from '@/hooks/useAuth';
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
+import { FaSkull, FaEye, FaEyeSlash } from "react-icons/fa";
+import { auth } from "@/config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import UserDetailsRoute from "../auth/UserDetailsRoute";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useAuth from "@/hooks/useAuth";
 
 const SignUpPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {signUp} = useAuth();
+  const { signUp } = useAuth();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -35,18 +35,18 @@ const SignUpPage: React.FC = () => {
     setLoading(true);
     try {
       await signUp(email, password);
-      toast.success('Account created successfully!', {
+      toast.success("Account created successfully!", {
         position: "top-center",
       });
-      router.push('/auth/userDetails');
+      router.push("/auth/userDetails");
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`Some error occured. Please try again`, {
-          position: 'top-center'
+          position: "top-center",
         });
       } else {
-        toast.error('An unexpected error occurred.', {
-          position: 'top-center',
+        toast.error("An unexpected error occurred.", {
+          position: "top-center",
         });
       }
     } finally {
@@ -55,17 +55,20 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="py-12  bg-gray-900 flex items-center justify-center">
+    <div className="py-12  bg-black flex items-center justify-center">
       <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
-        <h2 className="text-gray-200 font-black text-xl font-serif flex items-center">
-              GRAVEYARD
-            </h2>
+          <h2 className="text-gray-200 font-black text-xl font-serif flex items-center">
+            GRAVEYARD
+          </h2>
           <p className="text-gray-300">Sign up to access your account</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-300 font-medium mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-300 font-medium mb-2"
+            >
               Email
             </label>
             <input
@@ -78,12 +81,15 @@ const SignUpPage: React.FC = () => {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-300 font-medium mb-2">
+            <label
+              htmlFor="password"
+              className="block text-gray-300 font-medium mb-2"
+            >
               Password
             </label>
             <div className="relative">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
@@ -104,10 +110,14 @@ const SignUpPage: React.FC = () => {
             className="w-full py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors duration-300"
             disabled={loading}
           >
-            {loading ? 'Signing Up...' : 'Sign Up'}
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
           <p className="mt-2 text-gray-300">
-            Already a user? <Link className="text-orange-400 hover:underline" href="/login"> Login here</Link>
+            Already a user?{" "}
+            <Link className="text-orange-400 hover:underline" href="/login">
+              {" "}
+              Login here
+            </Link>
           </p>
         </form>
         <ToastContainer />

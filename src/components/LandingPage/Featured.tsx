@@ -13,7 +13,7 @@ const FeaturedSection: React.FC = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <section className="bg-gray-900">
+    <section className="bg-black">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Carousel
           showArrows={true}

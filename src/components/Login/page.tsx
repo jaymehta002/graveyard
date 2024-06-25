@@ -1,16 +1,16 @@
-'use client';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { FaSkull, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
+import { FaSkull, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // const {signIn} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { user, signIn } = useAuth();
   const router = useRouter();
 
@@ -28,19 +28,19 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     try {
       await signIn(email, password);
       // console.log('User:', user);
-      router.push('/');
+      router.push("/");
     } catch (err) {
-      setError('Failed to log in. Please check your credentials.');
-      console.error('Login error:', err);
+      setError("Failed to log in. Please check your credentials.");
+      console.error("Login error:", err);
     }
   };
 
   return (
-    <div className="py-12 flex items-center justify-center bg-gray-900 px-4 sm:px-6 lg:px-8">
+    <div className="py-12 flex items-center justify-center bg-black px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
           <h1 className="text-white text-3xl font-black">GraveYard Login</h1>
@@ -48,7 +48,10 @@ const LoginPage: React.FC = () => {
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-300 font-medium mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-300 font-medium mb-2"
+            >
               Email
             </label>
             <input
@@ -61,12 +64,15 @@ const LoginPage: React.FC = () => {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-300 font-medium mb-2">
+            <label
+              htmlFor="password"
+              className="block text-gray-300 font-medium mb-2"
+            >
               Password
             </label>
             <div className="relative">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
@@ -88,7 +94,13 @@ const LoginPage: React.FC = () => {
           >
             Login
           </button>
-          <p className='mt-2 text-gray-300'>New user? <Link className='text-orange-400 hover:underline' href='/register'> Click here to Register</Link></p>
+          <p className="mt-2 text-gray-300">
+            New user?{" "}
+            <Link className="text-orange-400 hover:underline" href="/register">
+              {" "}
+              Click here to Register
+            </Link>
+          </p>
         </form>
       </div>
     </div>

@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+    font-family: 'font-logo';
+    src: url('/fonts/font.otf') format('opentype');
+}
+
+.font-logo {
+    font-family: 'font-logo';
+}

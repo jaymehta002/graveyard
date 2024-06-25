@@ -59,23 +59,23 @@ const Default = ({ children }: any) => {
           </button>
           <span className="ml-8 font-bold">{isAdmin ? 'Admin Dashboard' : 'User Dashboard'}</span>
         </div>
-        <div className="hidden lg:flex items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
             Logout
           </button>
         </div>
-        <div className="lg:hidden">
+        {/* <div className="lg:hidden">
           <button onClick={toggleMenu} className="text-white">
             <FiMenu size={24} />
           </button>
-        </div>
-        {isMenuOpen && (
+        </div> */}
+        {/* {isMenuOpen && (
           <div className="lg:hidden absolute top-16 right-0 bg-gray-800 flex flex-col items-center space-y-2 p-4">
             <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">
               Logout
             </button>
           </div>
-        )}
+        )} */}
       </nav>
 
       <div className="flex flex-grow">

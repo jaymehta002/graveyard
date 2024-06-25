@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1 */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Graveyard</h3>
+            <h3 className="text-xl font-bold font-logo mb-4">Graveyard</h3>
             <p className="text-sm">
               Embrace the darkness with our chilling streetwear collection. Quality threads for the undead souls.
             </p>

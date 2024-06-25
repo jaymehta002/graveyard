@@ -1,17 +1,16 @@
-"use client";
+'use client'
 import Link from "next/link";
 import React, { useState } from "react";
-import { FaSkull, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Change from "next/navigation" to "next/router"
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const {signIn} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { user, signIn } = useAuth();
+  const { signIn } = useAuth(); // Destructure signIn directly
   const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +30,6 @@ const LoginPage: React.FC = () => {
     setError("");
     try {
       await signIn(email, password);
-      // console.log('User:', user);
       router.push("/");
     } catch (err) {
       setError("Failed to log in. Please check your credentials.");
@@ -40,17 +38,17 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="py-12 flex items-center justify-center bg-black px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-gray-800 rounded-lg shadow-lg p-8">
+    <div className="py-12 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <div className="mb-8 text-center">
-          <h1 className="text-white text-3xl font-black">GraveYard Login</h1>
+          <h1 className="text-black font-logo text-3xl font-black">GRAVEYARD</h1>
         </div>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-gray-300 font-medium mb-2"
+              className="block text-gray-800 font-medium mb-2"
             >
               Email
             </label>
@@ -59,14 +57,14 @@ const LoginPage: React.FC = () => {
               id="email"
               value={email}
               onChange={handleEmailChange}
-              className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-3 py-2 bg-gray-200 text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
               required
             />
           </div>
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="block text-gray-300 font-medium mb-2"
+              className="block text-gray-800 font-medium mb-2"
             >
               Password
             </label>
@@ -76,12 +74,12 @@ const LoginPage: React.FC = () => {
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
-                className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 bg-gray-200 text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                 required
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-orange-500"
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-gray-500"
                 onClick={togglePasswordVisibility}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -90,15 +88,14 @@ const LoginPage: React.FC = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors duration-300"
+            className="w-full py-2 bg-black text-white font-semibold rounded-md hover:bg-gray-600 transition-colors duration-300"
           >
             Login
           </button>
-          <p className="mt-2 text-gray-300">
-            New user?{" "}
-            <Link className="text-orange-400 hover:underline" href="/register">
-              {" "}
-              Click here to Register
+          <p className="mt-2 text-gray-800">
+            Not a user?{" "}
+            <Link href="/register">
+              <span className="text-gray-400 hover:text-gray-800 hover:underline">Register here</span>
             </Link>
           </p>
         </form>

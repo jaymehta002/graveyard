@@ -36,7 +36,7 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 z-40`}
       >
-        <h2 className="text-2xl font-black font-serif p-4">
+        <h2 className="text-2xl font-logo ml-12 lg:ml-0 font-black font-serif p-4">
           <Link href="/">GRAVEYARD</Link>
         </h2>
         <ul className="mt-12">

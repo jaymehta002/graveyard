@@ -23,9 +23,7 @@ export default function Home() {
 
   if (isProductLoading || isPageLoading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-100">
         <LoadingSpinner />
-      </div>
     );
   }
 

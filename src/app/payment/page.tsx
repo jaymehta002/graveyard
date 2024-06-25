@@ -40,6 +40,7 @@ const PaymentPageContent: React.FC = () => {
   const editProduct = useProductStore((state) => state.editProduct);
   const products = useProductStore((state) => state.products);
   const addOrderToUser = useUserStore((state) => state.addOrderToUser);
+  
   const fetchAndStoreDetails = useCallback(async () => {
     const detailsString = searchParams.get('details');
     if (!detailsString) {
@@ -54,12 +55,12 @@ const PaymentPageContent: React.FC = () => {
         date: new Date(),
       };
       setPaymentDetails(updatedDetails);
-      await savePaymentDetails(updatedDetails);
+      // await savePaymentDetails(updatedDetails);
     } catch (err) {
       console.error('Error processing payment details:', err);
       setError('Invalid payment details');
     }
-  }, [searchParams, setPaymentDetails, savePaymentDetails]);
+  }, [searchParams, setPaymentDetails]);
 
   const loadRazorpayScript = () => {
     const script = document.createElement('script');
@@ -139,7 +140,9 @@ const PaymentPageContent: React.FC = () => {
   });
 
   const handlePaymentSuccess = async (response: any) => {
-    // console.log('Payment successful', response);
+    // Ensure this block executes only once
+    if (orderPlaced) return;
+
     setOrderPlaced(true);
     clearCart();
 
@@ -192,7 +195,7 @@ const PaymentPageContent: React.FC = () => {
           date: new Date(),
         };
         const payId = await savePaymentDetails(updatedDetails);
-        await addOrderToUser(user.uid, {...updatedOrderDetails, oid: payId});
+        await addOrderToUser(user.uid, { ...updatedOrderDetails, oid: payId });
       } catch (error) {
         console.error('Error saving order:', error);
       }
@@ -217,11 +220,11 @@ const PaymentPageContent: React.FC = () => {
           </div>
           <div className="flex justify-between font-bold text-xl mb-8 p-4 bg-gray-100 rounded-lg">
             <span>Total:</span>
-            <span>₹{(paymentDetails.totalPrice + 70).toFixed(2) }</span>
+            <span>₹{(paymentDetails.totalPrice + 70).toFixed(2)}</span>
           </div>
           <button
             onClick={handlePayment}
-            disabled={loading}
+            disabled={loading || orderPlaced} // Disable the button if loading or order is already placed
             className="w-full bg-gray-500 text-white py-4 px-6 rounded-lg hover:bg-gray-600 transition-colors duration-300 flex items-center justify-center text-lg font-semibold"
           >
             {loading ? (

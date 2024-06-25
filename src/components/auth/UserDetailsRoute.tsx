@@ -6,7 +6,6 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth, storage } from '@/config/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import LoadingSpinner from '../Loader/loader';
-import ProtectedRoute from './ProtectedRoute';
 import Image from 'next/image';
 
 const UserDetailsRoute: React.FC = () => {
@@ -31,30 +30,43 @@ const UserDetailsRoute: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log("Auth state changed. Current user:", currentUser);
       if (currentUser) {
         setUser(currentUser);
-        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setFormData({
-            name: userData.name || '',
-            gender: userData.gender || '',
-            age: userData.age || '',
-            phone: userData.phone || '',
-            dob: userData.dob || '',
-            street: userData.address?.street || '',
-            city: userData.address?.city || '',
-            state: userData.address?.state || '',
-            country: userData.address?.country || '',
-            zip: userData.address?.zip || '',
-          });
-          setProfilePicURL(userData.profilePic || '');
-          router.push('/');
-        } else {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.detailsCompleted) {
+              console.log("User details already completed. Redirecting to home.");
+              router.push('/');
+            } else {
+              console.log("User exists but details not completed. Showing form.");
+              setFormData({
+                name: userData.name || '',
+                gender: userData.gender || '',
+                age: userData.age || '',
+                phone: userData.phone || '',
+                dob: userData.dob || '',
+                street: userData.address?.street || '',
+                city: userData.address?.city || '',
+                state: userData.address?.state || '',
+                country: userData.address?.country || '',
+                zip: userData.address?.zip || '',
+              });
+              setProfilePicURL(userData.profilePic || '');
+              setLoading(false);
+            }
+          } else {
+            console.log("New user. Showing form.");
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error fetching user document:", error);
           setLoading(false);
         }
       } else {
+        console.log("No user detected, redirecting to login");
         router.push('/login');
       }
     });
@@ -76,6 +88,9 @@ const UserDetailsRoute: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (step !== 4) {
+      return;
+    }
     setLoading(true);
     try {
       if (user) {
@@ -98,7 +113,8 @@ const UserDetailsRoute: React.FC = () => {
             state: formData.state,
             country: formData.country,
             zip: formData.zip,
-          }
+          },
+          detailsCompleted: true
         });
         router.push('/');
       }
@@ -109,7 +125,13 @@ const UserDetailsRoute: React.FC = () => {
     }
   };
 
-  const nextStep = () => setStep(prev => Math.min(prev + 1, 4));
+  const nextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (step < 4) {
+      setStep(prev => prev + 1);
+    }
+  };
+
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
   if (loading) {
@@ -169,42 +191,40 @@ const UserDetailsRoute: React.FC = () => {
   };
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8 bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-900 text-center">User Details</h2>
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-            {renderStep()}
-            <div className="flex justify-between">
-              {step > 1 && (
-                <button type="button" onClick={prevStep} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors duration-300">
-                  Previous
-                </button>
-              )}
-              {step < 4 ? (
-                <button type="button" onClick={nextStep} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300">
-                  Next
-                </button>
-              ) : (
-                <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300">
-                  Save Details
-                </button>
-              )}
-            </div>
-          </form>
-          <div className="mt-4">
-            <div className="flex justify-between">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className={`w-1/4 h-2 ${i <= step ? 'bg-blue-500' : 'bg-gray-200'}`}></div>
-              ))}
-            </div>
-            <div className="text-center text-sm text-gray-500 mt-2">
-              Step {step} of 4
-            </div>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-6 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-gray-900 text-center">User Details</h2>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          {renderStep()}
+          <div className="flex justify-between">
+            {step > 1 && (
+              <button type="button" onClick={prevStep} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors duration-300">
+                Previous
+              </button>
+            )}
+            {step < 4 ? (
+              <button type="button" onClick={nextStep} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300">
+                Next
+              </button>
+            ) : (
+              <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300">
+                Save Details
+              </button>
+            )}
+          </div>
+        </form>
+        <div className="mt-4">
+          <div className="flex justify-between">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className={`w-1/4 h-2 ${i <= step ? 'bg-blue-500' : 'bg-gray-200'}`}></div>
+            ))}
+          </div>
+          <div className="text-center text-sm text-gray-500 mt-2">
+            Step {step} of 4
           </div>
         </div>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 };
 

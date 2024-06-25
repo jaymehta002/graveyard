@@ -28,7 +28,6 @@ const UserInfoItem: React.FC<{
 );
 
 const UserDetails: React.FC<{ user: User }> = ({ user }) => {
-  // console.log(user)
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mx-auto">
       <div className="flex flex-col md:flex-row">
@@ -44,11 +43,11 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
             alt="Profile Picture"
             width={150}
             height={150}
-            className="rounded-full border-4 border-gray-200"
+            className="rounded-full h-48 w-48 border-4 border-gray-200"
           />
-          <button className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center">
+          {/* <button className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center">
             <FaEdit className="mr-2" /> Edit Profile
-          </button>
+          </button> */}
         </div>
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-4">{user.name}</h1>
@@ -70,6 +69,27 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
 };
 
 const ActivitySection: React.FC<{ orders: Order[] }> = ({ orders }) => {
+  const router = useRouter();
+  const handleRedirect = (e:any) => {
+    e.preventDefault();
+    router.push("/products/all");
+  }
+  if (!orders || orders.length === 0) {
+    return (
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl mx-auto mt-8">
+        <div className="flex flex-col items-center justify-center h-64">
+          <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <p className="text-gray-700 text-xl font-semibold mb-2">No orders yet</p>
+          <p className="text-gray-500 text-center">When you make a purchase, your order history will appear here.</p>
+          <button onClick={() => handleRedirect} className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300">
+            Start Shopping
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl mx-auto mt-8">
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Recent Activity</h2>

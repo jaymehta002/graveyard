@@ -5,9 +5,19 @@ import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import User from "@/types/user";
 import { useRouter } from "next/navigation";
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit, FaSignOutAlt } from 'react-icons/fa';
-import {Order} from "@/types/order";
-const UserInfoItem: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
+import {
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaEdit,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { Order } from "@/types/order";
+const UserInfoItem: React.FC<{
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}> = ({ icon, label, value }) => (
   <div className="flex items-center mb-4">
     <div className="text-gray-600 mr-3">{icon}</div>
     <div>
@@ -26,7 +36,10 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
           <Image
             src={
               user.profilePic ||
-              `https://via.placeholder.com/150/808080/FFFFFF?text=${user.name.slice(0, 1)}`
+              `https://via.placeholder.com/150/808080/FFFFFF?text=${user.name.slice(
+                0,
+                1
+              )}`
             }
             alt="Profile Picture"
             width={150}
@@ -39,7 +52,11 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
         </div>
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-4">{user.name}</h1>
-          <UserInfoItem icon={<FaEnvelope />} label="Email" value={user.email} />
+          <UserInfoItem
+            icon={<FaEnvelope />}
+            label="Email"
+            value={user.email}
+          />
           <UserInfoItem icon={<FaPhone />} label="Phone" value={user.phone} />
           <UserInfoItem
             icon={<FaMapMarkerAlt />}
@@ -54,71 +71,110 @@ const UserDetails: React.FC<{ user: User }> = ({ user }) => {
 
 const ActivitySection: React.FC<{ orders: Order[] }> = ({ orders }) => {
   return (
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl mx-auto mt-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">Recent Activity</h2>
-          <div className="space-y-8">
-              {orders.map((order, index) => (
-                  <div key={order.oid} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-300">
-                      <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-xl font-semibold text-blue-600">Order #{order.oid}</h3>
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              order.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                              order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-red-100 text-red-800'
-                          }`}>
-                              {order.status}
-                          </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-4">Ordered on: {new Date(order.date).toLocaleDateString()}</p>
-                      
-                      <div className="mb-4">
-                          <h4 className="font-medium text-gray-700 mb-2">Products:</h4>
-                          <ul className="list-disc list-inside space-y-1">
-                              {order.products.map((product : any) => (
-                                  <li key={product.pid} className="text-sm text-gray-600">
-                                      {product.name} - {product.quantity}x ${product.price} ({product.size})
-                                  </li>
-                              ))}
-                          </ul>
-                      </div>
-                      
-                      <div className="flex justify-between items-center mb-4">
-                          <span className="text-lg font-semibold text-gray-800">Total: ${order.total.toFixed(2)}</span>
-                          <span className="text-sm font-medium text-purple-600">Shipping: {order.shippingStatus}</span>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                              <h4 className="font-medium text-gray-700 mb-1">Shipping Address:</h4>
-                              <p className="text-gray-600">
-                                  {order.address.street}, {order.address.city}, {order.address.state}<br />
-                                  {order.address.country}, {order.address.zip}
-                              </p>
-                          </div>
-                          {order.payment && (
-                              <div>
-                                  <h4 className="font-medium text-gray-700 mb-1">Payment:</h4>
-                                  <p className="text-gray-600">
-                                      Method: {order.payment.method}<br />
-                                      Transaction: {order.payment.transaction}
-                                  </p>
-                              </div>
-                          )}
-                          {order.delivery && (
-                              <div className="col-span-2">
-                                  <h4 className="font-medium text-gray-700 mb-1">Delivery:</h4>
-                                  <p className="text-gray-600">
-                                      Method: {order.delivery.method}<br />
-                                      Tracking: {order.delivery.tracking}<br />
-                                      Expected Date: {new Date(order.delivery.date).toLocaleDateString()}
-                                  </p>
-                              </div>
-                          )}
-                      </div>
-                  </div>
-              ))}
+    <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl mx-auto mt-8">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">Recent Activity</h2>
+      <div className="space-y-8">
+        {orders.map((order, index) => (
+          <div
+            key={order.oid}
+            className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-300"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3
+                className="text-xl font-semibold text-blue-600 overflow-hidden text-ellipsis whitespace-nowrap"
+                style={{ maxWidth: "calc(100% - 150px)" }}
+              >
+                Order <br /> #{order.oid}
+              </h3>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  order.status === "PAID"
+                    ? "bg-green-100 text-green-800"
+                    : order.status === "PENDING"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "bg-red-100 text-red-800"
+                }`}
+                style={{ minWidth: "100px", textAlign: "center" }}
+              >
+                {order.status}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-4">
+              Ordered on: {new Date(order.date).toLocaleDateString()}
+            </p>
+
+            <div className="mb-4">
+              <h4 className="font-medium text-gray-700 mb-2">Products:</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {order.products.map((product: any) => (
+                  <li key={product.pid} className="text-sm text-gray-600">
+                    {product.name} - {product.quantity}x ${product.price} (
+                    {product.size})
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-lg font-semibold text-gray-800">
+                Total: ${order.total.toFixed(2)}
+              </span>
+              <span
+                className={`text-sm font-medium ${
+                  order.shippingStatus === "DELIVERED"
+                    ? "text-green-500"
+                    : order.shippingStatus === "CANCELLED"
+                    ? "text-red-500"
+                    : order.shippingStatus === "PENDING"
+                    ? "text-yellow-500"
+                    : "text-blue-600"
+                }`}
+              >
+                {order.shippingStatus}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <h4 className="font-medium text-gray-700 mb-1">
+                  Shipping Address:
+                </h4>
+                <p className="text-gray-600">
+                  {order.address.street}, {order.address.city},{" "}
+                  {order.address.state}
+                  <br />
+                  {order.address.country}, {order.address.zip}
+                </p>
+              </div>
+              {order.payment && (
+                <div>
+                  <h4 className="font-medium text-gray-700 mb-1">Payment:</h4>
+                  <p className="text-gray-600">
+                    Method: {order.payment.method}
+                    <br />
+                    Transaction: {order.payment.transaction}
+                  </p>
+                </div>
+              )}
+              {order.delivery && (
+                <div className="col-span-2">
+                  <h4 className="font-medium text-gray-700 mb-1">Delivery:</h4>
+                  <p className="text-gray-600">
+                    Method: {order.delivery.method}
+                    <br />
+                    Tracking: {order.delivery.tracking}
+                    <br />
+                    Expected Date:{" "}
+                    {new Date(order.delivery.date).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
+        ))}
       </div>
+    </div>
   );
 };
 

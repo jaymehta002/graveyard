@@ -92,7 +92,7 @@ const OrderTable = () => {
                   <div className="flex item-center justify-center">
                     {editingStatus === order.oid ? (
                       <button onClick={() => setEditingStatus(null)} className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                        Cancel
+                        &#x2716;
                       </button>
                     ) : (
                       <FaEdit onClick={() => handleEditStatus(order.oid)} className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110" />

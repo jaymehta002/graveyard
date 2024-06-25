@@ -56,8 +56,8 @@ const Page = () => {
 
   return (
     <ProductsPage>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white">
+        <h1 className="text-3xl font-bold text-black mb-8 border-b border-gray-300 pb-4">
           All Products
         </h1>
 
@@ -67,11 +67,11 @@ const Page = () => {
             placeholder="Search products..."
             value={searchTerm}
             onChange={handleSearch}
-            className="w-full sm:w-1/2 px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full sm:w-1/2 px-4 py-2 rounded-md bg-gray-100 text-black focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
           <button
             onClick={toggleFilter}
-            className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition duration-300"
+            className="w-full sm:w-auto px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition duration-300"
           >
             {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
           </button>
@@ -90,7 +90,7 @@ const Page = () => {
                 name="category"
                 value={filters.category}
                 onChange={handleFilterChange}
-                className="px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="px-4 py-2 rounded-md bg-gray-100 text-black focus:outline-none focus:ring-2 focus:ring-gray-300"
               >
                 <option value="">All Categories</option>
                 <option value="electronics">Electronics</option>
@@ -101,7 +101,7 @@ const Page = () => {
                 name="price"
                 value={filters.price}
                 onChange={handleFilterChange}
-                className="px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="px-4 py-2 rounded-md bg-gray-100 text-black focus:outline-none focus:ring-2 focus:ring-gray-300"
               >
                 <option value="">All Prices</option>
                 <option value="low">Low to High</option>
@@ -111,7 +111,7 @@ const Page = () => {
                 name="rating"
                 value={filters.rating}
                 onChange={handleFilterChange}
-                className="px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="px-4 py-2 rounded-md bg-gray-100 text-black focus:outline-none focus:ring-2 focus:ring-gray-300"
               >
                 <option value="">All Ratings</option>
                 <option value="4">4 stars & up</option>
@@ -132,7 +132,7 @@ const Page = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/30 group"
+      className="bg-gray-100 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:shadow-gray-400/30 group"
       onClick={() => handleProductClick(product.pid)}
     >
       <div className="relative h-72 overflow-hidden">
@@ -144,28 +144,25 @@ const Page = () => {
           className="transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <button className="bg-orange-500 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-orange-600 transition duration-300 transform translate-y-4 group-hover:translate-y-0">
+          <button className="bg-gray-800 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-700 transition duration-300 transform translate-y-4 group-hover:translate-y-0">
             View Details
           </button>
         </div>
       </div>
       <div className="p-6 relative">
-        {/* <div className="absolute top-0 right-0 -mt-4 mr-4 bg-orange-500 text-white text-xs font-bold py-1 px-2 rounded-full">
-          New
-        </div> */}
-        <h3 className="text-white font-bold text-xl mb-2 truncate group-hover:text-orange-400 transition-colors duration-300">
+        <h3 className="text-black font-bold text-xl mb-2 truncate group-hover:text-gray-700 transition-colors duration-300">
           {product.name}
         </h3>
-        <p className="text-gray-400 text-sm mb-4 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 group-hover:text-gray-800 transition-colors duration-300">
           {product.description}
         </p>
         <div className="flex justify-between items-center">
-          <p className="text-orange-500 font-semibold text-lg group-hover:text-orange-400 transition-colors duration-300">
+          <p className="text-gray-800 font-semibold text-lg group-hover:text-gray-900 transition-colors duration-300">
             ₹{product.price}
           </p>
           <div className="flex items-center">
-            <span className="text-yellow-400 mr-1">★</span>
-            <span className="text-gray-400 text-sm">{product.rating.average.toFixed(1)}</span>
+            <span className="text-yellow-500 mr-1">★</span>
+            <span className="text-gray-600 text-sm">{product.rating.average.toFixed(1)}</span>
           </div>
         </div>
       </div>

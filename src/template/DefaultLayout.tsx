@@ -16,7 +16,7 @@ const useLayout = ({ children }: any) => {
   }
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-gray-100 min-h-screen">
       <Navbar />
 
       <main className="flex-grow container mx-auto px-4 py-8">{children}</main>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import useContentStore from "@/store/contentStore";
 import useProductStore from "@/store/productStore";
 import { useRouter } from "next/navigation";
+
 type Product = {
   pid: string;
   name: string;
@@ -41,8 +42,9 @@ const Sale = () => {
   const handleRedirect = (id: string) => {
     router.push(`/products/${id}`);
   };
+  
   return (
-    <div className="bg-black py-12">
+    <div className="bg-gray-100 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center">
           {/* Image on the left */}
@@ -60,19 +62,19 @@ const Sale = () => {
           </div>
 
           <div className="w-full md:w-1/2 md:pl-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-black mb-4">
               Limited Time Offer
             </h2>
-            <h3 className="text-2xl font-semibold text-orange-500 mb-2">
+            <h3 className="text-2xl font-semibold text-gray-800 mb-2">
               {product.name}
             </h3>
-            <p className="text-gray-300 mb-4">{product.description}</p>
+            <p className="text-gray-600 mb-4">{product.description}</p>
             <div className="mb-6">
-              <span className="text-2xl font-bold text-white">
+              <span className="text-2xl font-bold text-black">
                 ₹{product.price}
               </span>
             </div>
-            <ul className="text-gray-300 mb-6">
+            <ul className="text-gray-600 mb-6">
               <li className="mb-2">✓ Category: {product.category}</li>
               <li className="mb-2">
                 ✓ Available sizes: {product.sizes.join(", ")}
@@ -85,7 +87,7 @@ const Sale = () => {
             </ul>
             <button
               onClick={() => handleRedirect(product.pid)}
-              className="bg-orange-500 text-white py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300"
+              className="bg-gray-800 text-white py-2 px-6 rounded-full hover:bg-gray-700 transition duration-300"
             >
               View Details
             </button>

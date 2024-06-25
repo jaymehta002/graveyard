@@ -13,7 +13,7 @@ const FeaturedSection: React.FC = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <section className="bg-black">
+    <section className="bg-gray-100">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Carousel
           showArrows={true}
@@ -75,7 +75,7 @@ const FeaturedSection: React.FC = () => {
               key={index}
               onClick={() => setActiveSlide(index)}
               className={`h-3 w-3 rounded-full mx-1 transition-all duration-300 ${
-                activeSlide === index ? 'bg-orange-500 w-6' : 'bg-gray-400'
+                activeSlide === index ? 'bg-gray-800 w-6' : 'bg-gray-400'
               }`}
             />
           ))}

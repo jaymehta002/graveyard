@@ -13,7 +13,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
         className="fixed inset-0 bg-gray-800 opacity-50"
         onClick={onClose}
       ></div>
-      <div className="bg-black rounded-lg p-6 z-10">{children}</div>
+      <div className=" rounded-lg p-6 z-10">{children}</div>
     </div>
   );
 };

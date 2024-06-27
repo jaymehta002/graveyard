@@ -129,7 +129,7 @@ const ActivitySection: React.FC<{ orders: Order[] }> = ({ orders }) => {
               <ul className="list-disc list-inside space-y-1">
                 {order.products.map((product: any) => (
                   <li key={product.pid} className="text-sm text-gray-600">
-                    {product.name} - {product.quantity}x ${product.price} (
+                    {product.name} - {product.quantity}x ₹{product.price} (
                     {product.size})
                   </li>
                 ))}
@@ -138,7 +138,7 @@ const ActivitySection: React.FC<{ orders: Order[] }> = ({ orders }) => {
 
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg font-semibold text-gray-800">
-                Total: ${order.total.toFixed(2)}
+                Total: ₹{order.total.toFixed(2)}
               </span>
               <span
                 className={`text-sm font-medium ${

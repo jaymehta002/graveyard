@@ -104,6 +104,27 @@ const Stats = () => {
     ],
   };
 
+  const paymentMethods = orders.map((order) => order.payment?.method);
+  const paymentChart = paymentMethods.reduce((acc: { [key: string]: number } | undefined, method: any) => {
+    if (!acc) {
+      acc = {};
+    }
+    acc[method] = (acc[method] || 0) + 1;
+    return acc;
+  }, undefined);
+
+  const paymentChartData = {
+    // labels: Object.keys(paymentChart || {}),
+    labels: ['Cash On Delivery', 'Paid Online'],
+    datasets: [
+      {
+        label: 'Payment Methods',
+        data: Object.values(paymentChart || {}),
+        backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(0, 188, 0, 0.6)', 'rgba(75, 192, 192, 0.6)'],
+      },
+    ],
+  }
+
   const responsiveOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -212,6 +233,29 @@ const Stats = () => {
           <div className="h-40 sm:h-48 lg:h-56">
             <Doughnut 
               data={shippingGraph} 
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                      font: {
+                        size: 10,
+                      },
+                    },
+                  },
+                },
+              }} 
+            />
+          </div>
+        </div>
+        <div className="bg-white shadow-md rounded p-2 sm:p-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">Payment modes</h2>
+          <div className="h-40 sm:h-48 lg:h-56">
+            <Doughnut 
+              data={paymentChartData} 
               options={{
                 responsive: true,
                 maintainAspectRatio: false,

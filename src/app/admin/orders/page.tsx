@@ -15,6 +15,7 @@ const OrderTable = () => {
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [editingStatus, setEditingStatus] = useState<string | null>(null);
   const shippingStatusOptions = ['PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+  const paymentStatus = ['PAID', 'PENDING']
 
   const toggleOrderDetails = (orderId: string) => {
     setExpandedOrderId(orderId === expandedOrderId ? null : orderId);
@@ -37,7 +38,14 @@ const OrderTable = () => {
     updateOrder(newOrder); 
     setEditingStatus(null);
   }
-
+  const handleSavePayment = (order: Order, newStatus: string) => {
+    const newOrder = {
+      ...order,
+      status: newStatus
+    }
+    updateOrder(newOrder); 
+    setEditingStatus(null);
+  }
   return (
     <Default>
   <div className="container mx-auto px-4 py-8">
@@ -62,9 +70,27 @@ const OrderTable = () => {
                 <td className="py-3 px-2 sm:px-6 text-left">{getUserName(order.uid)}</td>
                 <td className="py-3 px-2 sm:px-6 text-left">₹{order.total.toFixed(2)}</td>
                 <td className="py-3 px-2 sm:px-6 text-left hidden md:table-cell">
-                  <span className={`py-1 px-2 rounded-full text-xs ${order.status === 'PAID' ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600'}`}>
+                  {/* <span className={`py-1 px-2 rounded-full text-xs ${order.status === 'PAID' ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600'}`}>
                     {order.status}
-                  </span>
+                  </span> */}
+                  {editingStatus === order.oid ? (
+                    <select 
+                      value={order.status}
+                      onChange={(e) => handleSavePayment(order, e.target.value)}
+                      className="border rounded px-2 py-1 text-xs sm:text-sm"
+                    >
+                      {paymentStatus.map((status) => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className={`py-1 px-2 rounded-full text-xs ${
+                      order.status === 'PAID' ? 'bg-green-200 text-green-600' :
+                      'bg-yellow-200 text-yellow-600'
+                    }`}>
+                      {order.status}
+                    </span>
+                  )}
                 </td>
                 <td className="py-3 px-2 sm:px-6 text-left">
                   {editingStatus === order.oid ? (

@@ -40,7 +40,7 @@ const PaymentPageContent: React.FC = () => {
   const editProduct = useProductStore((state) => state.editProduct);
   const products = useProductStore((state) => state.products);
   const addOrderToUser = useUserStore((state) => state.addOrderToUser);
-  
+  const [codloading, setcodloading] = useState<boolean>(false);
   const fetchAndStoreDetails = useCallback(async () => {
     const detailsString = searchParams.get('details');
     if (!detailsString) {
@@ -202,6 +202,48 @@ const PaymentPageContent: React.FC = () => {
     } 
   };
 
+  const handlecashOnDevlivery = async () => {
+    if (!paymentDetails || !user) return;
+
+    setcodloading(true);
+    setError(null);
+
+    try {
+      const updatedOrderDetails = {
+        uid: user.uid,
+        products: paymentDetails.items.map((item: any) => ({
+          pid: item.productId,
+          name: item.productName,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+        })),
+        total: paymentDetails.totalPrice,
+        status: 'PENDING',
+        date: new Date().toISOString(),
+        address: user.address,
+        payment: {
+          method: 'Cash on Delivery',
+          transaction: 'COD',
+        },
+        shippingStatus: 'PENDING',
+      };
+      addOrder(updatedOrderDetails);
+      const updatedDetails = {
+        ...paymentDetails,
+        date: new Date(),
+      };
+      const payId = await savePaymentDetails(updatedDetails);
+      await addOrderToUser(user.uid, { ...updatedOrderDetails, oid: payId });
+    } catch (error) {
+      console.error('Error saving order:', error);
+    } finally {
+      setcodloading(false);
+      setOrderPlaced(true);
+      clearCart();
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-12 bg-gray-50 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
@@ -232,7 +274,21 @@ const PaymentPageContent: React.FC = () => {
             ) : (
               <>
                 <FaCreditCard className="mr-2" />
-                Pay Now
+                Pay Online
+              </>
+            )}
+          </button>
+          <button
+            onClick={handlecashOnDevlivery}
+            disabled={codloading || orderPlaced} // Disable the button if loading or order is already placed
+            className="w-full mt-2 bg-gray-500 text-white py-4 px-6 rounded-lg hover:bg-gray-600 transition-colors duration-300 flex items-center justify-center text-lg font-semibold"
+          >
+            {loading ? (
+              'Processing...'
+            ) : (
+              <>
+                <FaCreditCard className="mr-2" />
+                Cash on Delivery
               </>
             )}
           </button>
